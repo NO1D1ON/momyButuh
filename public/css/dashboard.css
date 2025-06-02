@@ -1,0 +1,278 @@
+/* public/css/dashboard.css */
+
+:root {
+    --sidebar-width-expanded: 250px;
+    --orange-color: #f5a623;
+    --dark-bg-color: #1a1a1a;
+    --sidebar-bg-color: #2e2e2e;
+    --sidebar-item-hover: #444;
+    --text-color-light: #f0f0f0;
+    --text-color-dark: #333;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    color: var(--text-color-dark);
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* --- Sidebar Styling (Selalu Expanded) --- */
+.sidebar {
+    width: var(--sidebar-width-expanded); /* Selalu lebar penuh */
+    background-color: var(--sidebar-bg-color);
+    color: var(--text-color-light);
+    padding-top: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* TIDAK ADA LAGI TRANSFORM ATAU TRANSITION UNTUK BUKA/TUTUP */
+}
+
+/* Sidebar Header */
+.sidebar-header {
+    display: flex;
+    justify-content: flex-start; /* Selalu sejajarkan ke kiri */
+    align-items: center;
+    padding: 0 20px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.logo-text {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: var(--orange-color);
+    white-space: nowrap;
+    opacity: 1; /* Selalu terlihat */
+    visibility: visible;
+    max-height: 100px;
+}
+
+/* Hapus .hamburger-menu.close-btn karena tombol sudah dihapus di HTML */
+.hamburger-menu.close-btn {
+    display: none !important;
+}
+
+/* User Profile (Selalu dalam tampilan expanded) */
+.user-profile {
+    display: flex;
+    flex-direction: row; /* Selalu dalam baris */
+    justify-content: flex-start;
+    align-items: center;
+    padding: 20px;
+    border-top: 1px solid #444;
+    border-bottom: 1px solid #444;
+    margin-bottom: 20px;
+    overflow: hidden;
+    gap: 15px;
+}
+
+.profile-icon {
+    font-size: 2.5em;
+    color: #aaa;
+    margin-bottom: 0;
+}
+
+.profile-info {
+    text-align: left;
+    opacity: 1; /* Selalu terlihat */
+    visibility: visible;
+    max-height: 100px;
+}
+
+.user-name {
+    display: block;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+.user-role {
+    display: block;
+    font-size: 0.8em;
+    color: #bbb;
+}
+
+/* Sidebar Navigation (Selalu dalam tampilan expanded) */
+.sidebar-nav {
+    padding: 0 10px;
+}
+
+.nav-section-title {
+    color: #888;
+    font-size: 0.75em;
+    padding: 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
+    padding-left: 20px;
+    opacity: 1; /* Selalu terlihat */
+    visibility: visible;
+    max-height: 100px;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.sidebar-nav li {
+    margin-bottom: 5px;
+}
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Selalu sejajarkan ke kiri */
+    padding: 12px 20px;
+    color: var(--text-color-light);
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.2s ease; /* Hanya untuk hover */
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sidebar-nav a i {
+    font-size: 1.1em;
+    margin-right: 15px;
+    width: auto;
+    text-align: left;
+}
+
+/* Teks menu selalu terlihat */
+.sidebar-nav a span {
+    opacity: 1; /* Selalu terlihat */
+    visibility: visible;
+    max-width: 150px;
+    overflow: hidden;
+}
+
+/* --- Gaya untuk item menu yang aktif (penting!) --- */
+.sidebar-nav li.active a {
+    background-color: var(--orange-color); /* Warna kuning/oranye saat aktif */
+}
+/* Anda juga bisa menambahkan border jika ingin efek border seperti screenshot */
+/* .sidebar-nav li.active {
+    border-left: 5px solid white; 
+    padding-left: 15px;
+} */
+
+
+/* Sidebar Footer (Log Out - Selalu dalam tampilan expanded) */
+.sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 20px 0;
+    text-align: center;
+    border-top: 1px solid #444;
+    overflow: hidden;
+}
+.logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Selalu sejajarkan ke kiri */
+    padding: 12px 20px;
+    color: var(--text-color-light);
+    text-decoration: none;
+    background-color: transparent;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.logout-btn i {
+    font-size: 1.1em;
+    margin-right: 15px;
+}
+
+/* Teks Log Out selalu terlihat */
+.logout-btn span {
+    opacity: 1; /* Selalu terlihat */
+    visibility: visible;
+    max-width: 150px;
+    overflow: hidden;
+}
+
+.logout-btn:hover {
+    background-color: var(--sidebar-item-hover);
+}
+
+
+/* --- Main Content Styling (Selalu Bergeser) --- */
+.content {
+    flex-grow: 1;
+    margin-left: var(--sidebar-width-expanded); /* Selalu bergeser sesuai lebar sidebar expanded */
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--orange-color);
+    padding: 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: var(--text-color-light);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: 60px;
+    width: 100%;
+}
+
+/* Hapus semua aturan .hamburger-menu.open-btn karena tombol sudah dihapus di HTML */
+.hamburger-menu.open-btn {
+    display: none !important;
+}
+
+/* Dashboard Content Area (Tidak berubah) */
+.dashboard-content {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.center-content {
+    text-align: center;
+}
+.main-logo img {
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+}
+.welcome-text {
+    font-size: 1.5em;
+    color: var(--text-color-dark);
+}
+
+/* Responsif untuk layar kecil (mobile) */
+@media (max-width: 768px) {
+    .sidebar {
+        width: var(--sidebar-width-expanded);
+        transform: translateX(0); /* Selalu terlihat di mobile */
+    }
+    
+    .content {
+        margin-left: var(--sidebar-width-expanded); /* Konten bergeser di mobile juga */
+    }
+    
+    /* Hapus semua aturan hamburger-menu di media query */
+    .hamburger-menu.open-btn,
+    .hamburger-menu.close-btn {
+        display: none !important;
+    }
+}
