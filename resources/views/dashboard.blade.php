@@ -18,8 +18,9 @@
             <div class="user-profile">
                 <div class="profile-icon"><i class="fa-solid fa-user-circle"></i></div>
                 <div class="profile-info">
-                    <span class="user-name">Admin Name</span>
-                    <span class="user-role">Online</span>
+                    <span class="user-name">{{ Auth::user()->name }}</span>
+                    <span class="user-role"><span class="status-indicator online"></span> Online</span>
+                    <!-- <span class="user-role">Online</span> -->
                 </div>
             </div>
             <nav class="sidebar-nav">
@@ -39,7 +40,7 @@
                 </ul>
             </nav>
             <div class="sidebar-footer">
-                <a href="#" class="logout-btn"><span><i class="fa-solid fa-sign-out-alt"></i> Log Out</span></a>
+                <a href="{{ route('logout') }}" class="logout-btn"><span><i class="fa-solid fa-sign-out-alt"></i> Log Out</span></a>
             </div>
         </aside>
 
@@ -59,12 +60,12 @@
                     <div class="main-logo">
                         <img src="{{ asset('assets/logo.png') }}" alt="Logo FS">
                     </div>
-                    <p class="welcome-text">Welcome Admin Lasiento</p>
+                    <p class="welcome-text">Welcome Admin {{ Auth::user()->name }} </p>
                 </div>
             </div>
         </main>
     </div>
-
+    
     {{-- Memuat JavaScript untuk efek aktif menu --}}
     <script src="/js/dashboard.js"></script>
 </body>

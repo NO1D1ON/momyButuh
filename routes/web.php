@@ -1,26 +1,17 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+Route::get('login', [UserController::class, 'showLoginForm'])->name('login');
+Route::post('login', [UserController::class, 'login'])->name('auth.login');
+Route::get('forgot-password', [UserController::class, 'ShowPass'])->name('ShowPass');
 
-Route::get('dashboard', function () {
-    return view('dashboard');
+// Harus login dulu baru kebuka
+Route::middleware(['auth'])->group(function() {
+
+Route::get('dashboard', [UserController::class, 'showHome'])->name('dashboard');
+Route::get('logout', [UserController::class, 'logout'])->name('logout');
+
+
 });
-
-Route::get('/login', function() {
-    return view('auth.login');
-})->name('login');
-
-Route::get('/forgot-password', function() {
-    return view('auth.forgot-password');
-})->name('password.request');

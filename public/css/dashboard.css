@@ -44,7 +44,7 @@ body {
 /* Sidebar Header */
 .sidebar-header {
     display: flex;
-    justify-content: flex-start; /* Selalu sejajarkan ke kiri */
+    justify-content: center; /* Selalu sejajarkan ke kiri */
     align-items: center;
     padding: 0 20px 20px;
     position: relative;
@@ -62,9 +62,9 @@ body {
 }
 
 /* Hapus .hamburger-menu.close-btn karena tombol sudah dihapus di HTML */
-.hamburger-menu.close-btn {
+/* .hamburger-menu.close-btn {
     display: none !important;
-}
+} */
 
 /* User Profile (Selalu dalam tampilan expanded) */
 .user-profile {
@@ -99,10 +99,37 @@ body {
     font-size: 1.1em;
 }
 .user-role {
-    display: block;
+    display: flex; /* Jadikan flex container untuk menengahkan lingkaran & teks */
+    align-items: center; /* Tengahkan item (lingkaran & teks) secara vertikal */
     font-size: 0.8em;
     color: #bbb;
+    gap: 5px; /* Jarak antara lingkaran dan teks "Online" */
+    /* display: block;
+    font-size: 0.8em;
+    color: #bbb; */
 }
+
+.status-indicator {
+    display: inline-block; /* Agar bisa mengatur width/height */
+    width: 8px; /* Ukuran lingkaran hijau, sesuaikan */
+    height: 8px;
+    border-radius: 50%; /* Bentuk lingkaran */
+    /* background-color: #28a745; */ /* Warna hijau */
+    /* Atau gunakan variabel warna jika ada: */
+    background-color: var(--status-online-color, #28a745); /* Contoh dengan variabel baru */
+}
+
+.status-indicator.online {
+    background-color: #28aa45; /* Warna hijau, bisa disesuaikan */
+}
+
+/* Anda bisa menambahkan status lain jika diperlukan */
+/* .status-indicator.offline {
+    background-color: #dc3545; // Merah
+}
+.status-indicator.away {
+    background-color: #ffc107; // Kuning
+} */
 
 /* Sidebar Navigation (Selalu dalam tampilan expanded) */
 .sidebar-nav {
@@ -223,7 +250,7 @@ body {
 /* Navbar */
 .navbar {
     background-color: var(--orange-color);
-    padding: 15px 0;
+    padding: 6px 0;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -234,9 +261,9 @@ body {
 }
 
 /* Hapus semua aturan .hamburger-menu.open-btn karena tombol sudah dihapus di HTML */
-.hamburger-menu.open-btn {
+/* .hamburger-menu.open-btn {
     display: none !important;
-}
+} */
 
 /* Dashboard Content Area (Tidak berubah) */
 .dashboard-content {
