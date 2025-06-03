@@ -45,4 +45,34 @@ class UserController extends Controller
     {
         return view('auth.forgot-password');
     }
+
+    public function showInformasi()
+    {
+        return view('informasi');
+    }
+
+    public function showFasilitas()
+    {
+        return view('fasilitas');
+    }
+
+    public function showPembayaran()
+    {
+        return view('pembayaran');
+    }
+
+    public function showPemesanan()
+    {
+        return view('pemesanan');
+    }
+
+    public function showLapangan()
+    {
+        return view('lapangan');
+    }
+
+    public function showKonsumen()
+    {
+        return view('konsumen');
+    }
 }

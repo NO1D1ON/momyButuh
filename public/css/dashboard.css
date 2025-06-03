@@ -24,7 +24,6 @@ body {
     overflow-x: hidden;
 }
 
-/* --- Sidebar Styling (Selalu Expanded) --- */
 .sidebar {
     width: var(--sidebar-width-expanded); /* Selalu lebar penuh */
     background-color: var(--sidebar-bg-color);
@@ -38,21 +37,23 @@ body {
     z-index: 1000;
     overflow-y: auto;
     overflow-x: hidden;
-    /* TIDAK ADA LAGI TRANSFORM ATAU TRANSITION UNTUK BUKA/TUTUP */
+
 }
 
 /* Sidebar Header */
 .sidebar-header {
+    height: 32px;
     display: flex;
-    justify-content: center; /* Selalu sejajarkan ke kiri */
+    justify-content: center; 
     align-items: center;
-    padding: 0 20px 20px;
+    padding: 0 10px;
     position: relative;
     overflow: hidden;
+
 }
 
 .logo-text {
-    font-size: 1.8em;
+    font-size: 1.2em;
     font-weight: bold;
     color: var(--orange-color);
     white-space: nowrap;
@@ -61,10 +62,6 @@ body {
     max-height: 100px;
 }
 
-/* Hapus .hamburger-menu.close-btn karena tombol sudah dihapus di HTML */
-/* .hamburger-menu.close-btn {
-    display: none !important;
-} */
 
 /* User Profile (Selalu dalam tampilan expanded) */
 .user-profile {
@@ -99,39 +96,24 @@ body {
     font-size: 1.1em;
 }
 .user-role {
-    display: flex; /* Jadikan flex container untuk menengahkan lingkaran & teks */
-    align-items: center; /* Tengahkan item (lingkaran & teks) secara vertikal */
+    display: flex; /* PENTING: Jadikan flex container */
+    align-items: center; /* PENTING: Tengahkan item (lingkaran & teks) secara vertikal */
     font-size: 0.8em;
     color: #bbb;
-    gap: 5px; /* Jarak antara lingkaran dan teks "Online" */
-    /* display: block;
-    font-size: 0.8em;
-    color: #bbb; */
+    gap: 5px; /* PENTING: Jarak antara lingkaran dan teks "Online" */
+    line-height: 1; /* Pastikan tinggi baris tidak terlalu besar */
 }
 
+/* Gaya untuk Lingkaran Indikator Status Online (BARU/DIREVISI) */
 .status-indicator {
     display: inline-block; /* Agar bisa mengatur width/height */
     width: 8px; /* Ukuran lingkaran hijau, sesuaikan */
     height: 8px;
     border-radius: 50%; /* Bentuk lingkaran */
-    /* background-color: #28a745; */ /* Warna hijau */
-    /* Atau gunakan variabel warna jika ada: */
-    background-color: var(--status-online-color, #28a745); /* Contoh dengan variabel baru */
+    background-color: var(--status-online-color, #28a745); /* Warna hijau */
+    /* Pastikan tidak ada margin yang mengganggu di sini, gap pada parent sudah cukup */
 }
 
-.status-indicator.online {
-    background-color: #28aa45; /* Warna hijau, bisa disesuaikan */
-}
-
-/* Anda bisa menambahkan status lain jika diperlukan */
-/* .status-indicator.offline {
-    background-color: #dc3545; // Merah
-}
-.status-indicator.away {
-    background-color: #ffc107; // Kuning
-} */
-
-/* Sidebar Navigation (Selalu dalam tampilan expanded) */
 .sidebar-nav {
     padding: 0 10px;
 }
@@ -165,9 +147,10 @@ body {
     color: var(--text-color-light);
     text-decoration: none;
     border-radius: 5px;
-    transition: background-color 0.2s ease; /* Hanya untuk hover */
-    white-space: nowrap;
-    overflow: hidden;
+    transition: background-color 0.2s ease;
+    white-space: nowrap; /* PENTING: Mencegah teks turun ke baris baru */
+    /* Pastikan TIDAK ADA overflow: hidden; di sini, atau set ke overflow: visible; */
+    overflow: visible; /* Coba ini jika hidden adalah masalahnya */
 }
 
 .sidebar-nav a i {
@@ -179,24 +162,17 @@ body {
 
 /* Teks menu selalu terlihat */
 .sidebar-nav a span {
-    opacity: 1; /* Selalu terlihat */
+    opacity: 1;
     visibility: visible;
-    max-width: 150px;
-    overflow: hidden;
+    max-width: none; /* Coba ini untuk menghapus semua batasan lebar */
+    overflow: visible; /* Coba ini jika hidden adalah masalahnya */
+    flex-grow: 1; /* PENTING: Memastikan span mengisi ruang yang tersedia */
 }
 
-/* --- Gaya untuk item menu yang aktif (penting!) --- */
 .sidebar-nav li.active a {
     background-color: var(--orange-color); /* Warna kuning/oranye saat aktif */
 }
-/* Anda juga bisa menambahkan border jika ingin efek border seperti screenshot */
-/* .sidebar-nav li.active {
-    border-left: 5px solid white; 
-    padding-left: 15px;
-} */
 
-
-/* Sidebar Footer (Log Out - Selalu dalam tampilan expanded) */
 .sidebar-footer {
     position: absolute;
     bottom: 0;
@@ -209,7 +185,7 @@ body {
 .logout-btn {
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Selalu sejajarkan ke kiri */
+    justify-content: flex-start; 
     padding: 12px 20px;
     color: var(--text-color-light);
     text-decoration: none;
@@ -225,7 +201,6 @@ body {
     margin-right: 15px;
 }
 
-/* Teks Log Out selalu terlihat */
 .logout-btn span {
     opacity: 1; /* Selalu terlihat */
     visibility: visible;
@@ -237,42 +212,62 @@ body {
     background-color: var(--sidebar-item-hover);
 }
 
-
-/* --- Main Content Styling (Selalu Bergeser) --- */
 .content {
     flex-grow: 1;
-    margin-left: var(--sidebar-width-expanded); /* Selalu bergeser sesuai lebar sidebar expanded */
+    margin-left: var(--sidebar-width-expanded);
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
 }
 
-/* Navbar */
 .navbar {
     background-color: var(--orange-color);
-    padding: 6px 0;
+    padding: 15px 0;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     color: var(--text-color-light);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    height: 60px;
+    height: 23px;
     width: 100%;
 }
 
-/* Hapus semua aturan .hamburger-menu.open-btn karena tombol sudah dihapus di HTML */
-/* .hamburger-menu.open-btn {
-    display: none !important;
-} */
 
-/* Dashboard Content Area (Tidak berubah) */
 .dashboard-content {
     flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    display: flex; /* Jadikan flex container */
+    flex-direction: column; /* Tata konten secara vertikal (atas ke bawah) */
+    justify-content: flex-start; /* Konten dimulai dari atas */
+    align-items: flex-start; /* Konten sejajar ke kiri */
+    padding: 20px; /* Padding di sekitar seluruh area konten */
+    width: 100%; /* Pastikan mengambil lebar penuh yang tersedia */
+    box-sizing: border-box; /* Sangat penting untuk padding */
 }
+
+/* Gaya spesifik untuk menengahkan konten di halaman Dashboard saja */
+.dashboard-content .center-content {
+    display: flex; /* Jadikan flex container */
+    justify-content: center; /* Tengahkan horizontal */
+    align-items: center; /* Tengahkan vertikal */
+    flex-direction: column; /* Tata logo dan teks secara vertikal */
+    
+    /* PENTING: Membuat center-content mengisi ruang yang tersedia */
+    flex-grow: 1; /* Memastikan elemen ini mengembang untuk mengisi ruang vertikal yang tersedia */
+    width: 100%; /* Memastikan elemen ini mengisi lebar horizontal yang tersedia */
+}
+
+/* ... (Gaya untuk .main-logo img dan .welcome-text jika ada) ... */
+.main-logo img {
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.welcome-text {
+    font-size: 1.5em;
+    color: var(--text-color-dark);
+}
+
 .center-content {
     text-align: center;
 }
@@ -297,9 +292,4 @@ body {
         margin-left: var(--sidebar-width-expanded); /* Konten bergeser di mobile juga */
     }
     
-    /* Hapus semua aturan hamburger-menu di media query */
-    .hamburger-menu.open-btn,
-    .hamburger-menu.close-btn {
-        display: none !important;
-    }
 }

@@ -1,48 +1,91 @@
 // public/js/dashboard.js
 
 document.addEventListener('DOMContentLoaded', function() {
-    const sidebarNavItems = document.querySelectorAll('.sidebar-nav ul li'); // Pilih semua item li di sidebar
+    const sidebarNavItems = document.querySelectorAll('.sidebar-nav ul li');
 
-    // Fungsi untuk mengatur item menu yang aktif
-    function setActiveMenuItem(clickedItem) {
-        // Hapus class 'active' dari semua item menu yang ada
+    function updateActiveMenuItem(targetItem) {
         sidebarNavItems.forEach(item => {
             item.classList.remove('active');
         });
 
-        // Tambahkan class 'active' ke item yang baru diklik
-        clickedItem.classList.add('active');
-
-        // Opsional: Simpan item aktif ke localStorage agar tetap aktif setelah refresh
-        localStorage.setItem('activeMenuItemId', clickedItem.id);
+        if (targetItem) {
+            targetItem.classList.add('active');
+            localStorage.setItem('activeMenuItemId', targetItem.id);
+            console.log(`[JS DEBUG] Setting active item: ${targetItem.id}`); // DEBUG
+        } else {
+            localStorage.removeItem('activeMenuItemId');
+            console.log('[JS DEBUG] No target item, clearing localStorage active ID.'); // DEBUG
+        }
     }
 
-    // Tambahkan event listener ke setiap item menu
+    // --- Logika Penentuan Item Aktif saat Halaman Dimuat ---
+    let currentPath = window.location.pathname;
+    if (currentPath.length > 1 && currentPath.endsWith('/')) {
+        currentPath = currentPath.slice(0, -1);
+    }
+    console.log(`[JS DEBUG] Current URL Path (normalized): '${currentPath}'`); // DEBUG
+
+    let activeItemFoundByUrl = false;
+
     sidebarNavItems.forEach(item => {
-        item.addEventListener('click', function(event) {
-            // Mencegah navigasi default jika href="#"
-            event.preventDefault(); 
-            setActiveMenuItem(this);
-        });
+        const link = item.querySelector('a');
+        if (link && link.href) {
+            const linkUrl = new URL(link.href);
+            let linkPath = linkUrl.pathname;
+
+            if (linkPath.length > 1 && linkPath.endsWith('/')) {
+                linkPath = linkPath.slice(0, -1);
+            }
+            
+            console.log(`[JS DEBUG] Comparing currentPath '${currentPath}' with linkPath '${linkPath}' for item ID '${item.id}'`); // DEBUG
+
+            if (currentPath === linkPath) {
+                updateActiveMenuItem(item);
+                activeItemFoundByUrl = true;
+                console.log(`[JS DEBUG] *** MATCH FOUND by URL for item ID: '${item.id}' ***`); // DEBUG
+            }
+        }
     });
 
-    // Periksa localStorage saat halaman dimuat untuk mengembalikan item aktif
-    const savedActiveMenuItemId = localStorage.getItem('activeMenuItemId');
-    if (savedActiveMenuItemId) {
-        const savedActiveItem = document.getElementById(savedActiveMenuItemId);
-        if (savedActiveItem) {
-            // Panggil setActiveMenuItem tanpa event.preventDefault() untuk inisialisasi
-            // karena kita hanya ingin mengatur class, bukan memicu navigasi.
-            sidebarNavItems.forEach(item => {
-                item.classList.remove('active');
-            });
-            savedActiveItem.classList.add('active');
+    // --- Logika Fallback ---
+    if (!activeItemFoundByUrl) {
+        console.log('[JS DEBUG] No URL match found. Checking localStorage/default.'); // DEBUG
+        const savedActiveMenuItemId = localStorage.getItem('activeMenuItemId');
+        
+        if (savedActiveMenuItemId) {
+            console.log(`[JS DEBUG] localStorage has saved ID: '${savedActiveMenuItemId}'`); // DEBUG
+            const savedActiveItem = document.getElementById(savedActiveMenuItemId);
+            if (savedActiveItem) {
+                updateActiveMenuItem(savedActiveItem);
+                console.log(`[JS DEBUG] Fallback: Activating item from localStorage: ${savedActiveMenuItemId}`); // DEBUG
+            } else {
+                localStorage.removeItem('activeMenuItemId');
+                console.log('[JS DEBUG] Fallback: localStorage ID not found in DOM, removed.'); // DEBUG
+                const defaultActiveItem = document.getElementById('menu-dashboard');
+                if (defaultActiveItem) {
+                    updateActiveMenuItem(defaultActiveItem);
+                    console.log('[JS DEBUG] Fallback: Defaulting to Dashboard (localStorage ID not found).'); // DEBUG
+                }
+            }
+        } else {
+            console.log('[JS DEBUG] No localStorage ID found. Defaulting to Dashboard.'); // DEBUG
+            const defaultActiveItem = document.getElementById('menu-dashboard');
+            if (defaultActiveItem) {
+                updateActiveMenuItem(defaultActiveItem);
+            }
         }
     } else {
-        // Jika tidak ada yang tersimpan, pastikan "Dashboard" aktif secara default
-        const defaultActiveItem = document.getElementById('menu-dashboard');
-        if (defaultActiveItem) {
-            defaultActiveItem.classList.add('active');
-        }
+        console.log('[JS DEBUG] URL match found, localStorage/default logic skipped.'); // DEBUG
     }
+
+    // --- Event Listener untuk Klik pada Item Menu ---
+    sidebarNavItems.forEach(item => {
+        item.addEventListener('click', function(event) {
+            // Ini akan memberikan feedback visual instan sebelum halaman dimuat ulang.
+            // Logika di atas (DOMContentLoaded) akan mengatur class aktif secara akurat
+            // setelah halaman baru dimuat berdasarkan URL.
+            updateActiveMenuItem(this);
+            console.log(`[JS DEBUG] Menu item clicked: ${this.id}`); // DEBUG
+        });
+    });
 });
