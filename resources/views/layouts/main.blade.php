@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}"> {{-- TAMBAH BARIS INI --}}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Dashboard')</title>
@@ -35,8 +36,8 @@
                 <ul>
                     <li id="menu-dashboard"><a href="{{ route('dashboard') }}"><span><i class="fa-solid fa-gauge"></i> Dashboard</span></a></li> {{-- Menggunakan ikon gauge --}}
                     <li id="menu-konsumen"><a href="{{ route('konsumen') }}"><span><i class="fa-solid fa-users"></i> Data Konsumen</span></a></li>
-                    <li id="menu-lapangan"><a href="{{ route('lapangan') }}"><span><i class="fa-solid fa-futbol"></i> Data Lapangan</span></a></li>
-                    <li id="menu-fasilitas"><a href="{{ route('fasilitas') }}"><span><i class="fa-solid fa-building"></i> Data Fasilitas</span></a></li>
+                    <li id="menu-lapangan"><a href="{{ route('lapangan.index') }}"><span><i class="fa-solid fa-futbol"></i> Data Lapangan</span></a></li>
+                    <li id="menu-fasilitas"><a href="{{ route('fasilitas.index') }}"><span><i class="fa-solid fa-building"></i> Data Fasilitas</span></a></li>
                     <li id="menu-pemesanan"><a href="{{ route('pemesanan') }}"><span><i class="fa-solid fa-clipboard-list"></i> Data Pemesanan</span></a></li>
                     <li id="menu-pembayaran"><a href="{{ route('pembayaran') }}"><span><i class="fa-solid fa-credit-card"></i> Data Pembayaran</span></a></li>
                 </ul>

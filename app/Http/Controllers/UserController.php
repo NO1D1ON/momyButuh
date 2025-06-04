@@ -51,11 +51,6 @@ class UserController extends Controller
         return view('informasi');
     }
 
-    public function showFasilitas()
-    {
-        return view('fasilitas');
-    }
-
     public function showPembayaran()
     {
         return view('pembayaran');
@@ -68,7 +63,7 @@ class UserController extends Controller
 
     public function showLapangan()
     {
-        return view('lapangan');
+        return view('lapangan.index');
     }
 
     public function showKonsumen()

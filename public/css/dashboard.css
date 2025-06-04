@@ -1,5 +1,7 @@
 /* public/css/dashboard.css */
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 :root {
     --sidebar-width-expanded: 250px;
     --orange-color: #f5a623;
@@ -8,11 +10,17 @@
     --sidebar-item-hover: #444;
     --text-color-light: #f0f0f0;
     --text-color-dark: #333;
+    --border-color-light: #eee;
+    --light-bg-color: #f8f8f8;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --info-color: #007bff;
+    --button-hover-color: #e08e1b; /* Menambahkan ini untuk hover umum */
 }
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', Arial, sans-serif;
     background-color: #ffffff;
     color: var(--text-color-dark);
 }
@@ -25,7 +33,7 @@ body {
 }
 
 .sidebar {
-    width: var(--sidebar-width-expanded); /* Selalu lebar penuh */
+    width: var(--sidebar-width-expanded);
     background-color: var(--sidebar-bg-color);
     color: var(--text-color-light);
     padding-top: 20px;
@@ -37,19 +45,16 @@ body {
     z-index: 1000;
     overflow-y: auto;
     overflow-x: hidden;
-
 }
 
-/* Sidebar Header */
 .sidebar-header {
     height: 32px;
     display: flex;
-    justify-content: center; 
+    justify-content: center;
     align-items: center;
     padding: 0 10px;
     position: relative;
     overflow: hidden;
-
 }
 
 .logo-text {
@@ -57,16 +62,14 @@ body {
     font-weight: bold;
     color: var(--orange-color);
     white-space: nowrap;
-    opacity: 1; /* Selalu terlihat */
+    opacity: 1;
     visibility: visible;
     max-height: 100px;
 }
 
-
-/* User Profile (Selalu dalam tampilan expanded) */
 .user-profile {
     display: flex;
-    flex-direction: row; /* Selalu dalam baris */
+    flex-direction: row;
     justify-content: flex-start;
     align-items: center;
     padding: 20px;
@@ -85,7 +88,7 @@ body {
 
 .profile-info {
     text-align: left;
-    opacity: 1; /* Selalu terlihat */
+    opacity: 1;
     visibility: visible;
     max-height: 100px;
 }
@@ -95,23 +98,22 @@ body {
     font-weight: bold;
     font-size: 1.1em;
 }
+
 .user-role {
-    display: flex; /* PENTING: Jadikan flex container */
-    align-items: center; /* PENTING: Tengahkan item (lingkaran & teks) secara vertikal */
+    display: flex;
+    align-items: center;
     font-size: 0.8em;
     color: #bbb;
-    gap: 5px; /* PENTING: Jarak antara lingkaran dan teks "Online" */
-    line-height: 1; /* Pastikan tinggi baris tidak terlalu besar */
+    gap: 5px;
+    line-height: 1;
 }
 
-/* Gaya untuk Lingkaran Indikator Status Online (BARU/DIREVISI) */
 .status-indicator {
-    display: inline-block; /* Agar bisa mengatur width/height */
-    width: 8px; /* Ukuran lingkaran hijau, sesuaikan */
+    display: inline-block;
+    width: 8px;
     height: 8px;
-    border-radius: 50%; /* Bentuk lingkaran */
-    background-color: var(--status-online-color, #28a745); /* Warna hijau */
-    /* Pastikan tidak ada margin yang mengganggu di sini, gap pada parent sudah cukup */
+    border-radius: 50%;
+    background-color: var(--success-color);
 }
 
 .sidebar-nav {
@@ -126,7 +128,7 @@ body {
     letter-spacing: 0.5px;
     text-align: left;
     padding-left: 20px;
-    opacity: 1; /* Selalu terlihat */
+    opacity: 1;
     visibility: visible;
     max-height: 100px;
 }
@@ -136,21 +138,22 @@ body {
     padding: 0;
     margin: 0;
 }
+
 .sidebar-nav li {
     margin-bottom: 5px;
 }
+
 .sidebar-nav a {
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Selalu sejajarkan ke kiri */
+    justify-content: flex-start;
     padding: 12px 20px;
     color: var(--text-color-light);
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.2s ease;
-    white-space: nowrap; /* PENTING: Mencegah teks turun ke baris baru */
-    /* Pastikan TIDAK ADA overflow: hidden; di sini, atau set ke overflow: visible; */
-    overflow: visible; /* Coba ini jika hidden adalah masalahnya */
+    white-space: nowrap;
+    overflow: visible;
 }
 
 .sidebar-nav a i {
@@ -160,17 +163,16 @@ body {
     text-align: left;
 }
 
-/* Teks menu selalu terlihat */
 .sidebar-nav a span {
     opacity: 1;
     visibility: visible;
-    max-width: none; /* Coba ini untuk menghapus semua batasan lebar */
-    overflow: visible; /* Coba ini jika hidden adalah masalahnya */
-    flex-grow: 1; /* PENTING: Memastikan span mengisi ruang yang tersedia */
+    max-width: none;
+    overflow: visible;
+    flex-grow: 1;
 }
 
 .sidebar-nav li.active a {
-    background-color: var(--orange-color); /* Warna kuning/oranye saat aktif */
+    background-color: var(--orange-color);
 }
 
 .sidebar-footer {
@@ -182,10 +184,11 @@ body {
     border-top: 1px solid #444;
     overflow: hidden;
 }
+
 .logout-btn {
     display: flex;
     align-items: center;
-    justify-content: flex-start; 
+    justify-content: flex-start;
     padding: 12px 20px;
     color: var(--text-color-light);
     text-decoration: none;
@@ -202,7 +205,7 @@ body {
 }
 
 .logout-btn span {
-    opacity: 1; /* Selalu terlihat */
+    opacity: 1;
     visibility: visible;
     max-width: 150px;
     overflow: hidden;
@@ -232,31 +235,87 @@ body {
     width: 100%;
 }
 
+.page-header {
+    background-color: #fff;
+    padding: 20px 30px;
+    border-bottom: 1px solid var(--border-color-light);
+    margin-top: 0;
+}
 
+.page-header h1 {
+    font-size: 1.8em;
+    color: var(--text-color-dark);
+    margin-bottom: 5px;
+}
+
+.page-header p {
+    font-size: 0.9em;
+    color: var(--text-color-dark);
+}
+
+.content-area {
+    padding: 20px 30px;
+    flex-grow: 1;
+    background-color: var(--light-bg-color);
+}
+
+/* Tombol generik */
+.btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+    color: #fff;
+}
+
+.btn-primary {
+    background-color: var(--orange-color);
+}
+.btn-primary:hover {
+    background-color: var(--button-hover-color);
+}
+.btn-success {
+    background-color: var(--success-color);
+}
+.btn-success:hover {
+    background-color: #218838;
+}
+.btn-info {
+    background-color: var(--info-color);
+}
+.btn-info:hover {
+    background-color: #0056b3;
+}
+.btn-danger {
+    background-color: var(--danger-color);
+}
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Dashboard Content specific styling */
 .dashboard-content {
     flex-grow: 1;
-    display: flex; /* Jadikan flex container */
-    flex-direction: column; /* Tata konten secara vertikal (atas ke bawah) */
-    justify-content: flex-start; /* Konten dimulai dari atas */
-    align-items: flex-start; /* Konten sejajar ke kiri */
-    padding: 20px; /* Padding di sekitar seluruh area konten */
-    width: 100%; /* Pastikan mengambil lebar penuh yang tersedia */
-    box-sizing: border-box; /* Sangat penting untuk padding */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* Gaya spesifik untuk menengahkan konten di halaman Dashboard saja */
 .dashboard-content .center-content {
-    display: flex; /* Jadikan flex container */
-    justify-content: center; /* Tengahkan horizontal */
-    align-items: center; /* Tengahkan vertikal */
-    flex-direction: column; /* Tata logo dan teks secara vertikal */
-    
-    /* PENTING: Membuat center-content mengisi ruang yang tersedia */
-    flex-grow: 1; /* Memastikan elemen ini mengembang untuk mengisi ruang vertikal yang tersedia */
-    width: 100%; /* Memastikan elemen ini mengisi lebar horizontal yang tersedia */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
 }
 
-/* ... (Gaya untuk .main-logo img dan .welcome-text jika ada) ... */
 .main-logo img {
     width: 150px;
     height: auto;
@@ -271,25 +330,14 @@ body {
 .center-content {
     text-align: center;
 }
-.main-logo img {
-    width: 150px;
-    height: auto;
-    margin-bottom: 20px;
-}
-.welcome-text {
-    font-size: 1.5em;
-    color: var(--text-color-dark);
-}
 
-/* Responsif untuk layar kecil (mobile) */
 @media (max-width: 768px) {
     .sidebar {
         width: var(--sidebar-width-expanded);
-        transform: translateX(0); /* Selalu terlihat di mobile */
+        transform: translateX(0);
     }
-    
+
     .content {
-        margin-left: var(--sidebar-width-expanded); /* Konten bergeser di mobile juga */
+        margin-left: var(--sidebar-width-expanded);
     }
-    
 }
