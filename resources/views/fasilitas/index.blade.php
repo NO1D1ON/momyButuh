@@ -6,6 +6,9 @@
 
 @push('styles')
     <link rel="stylesheet" href="css/fasilitas.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    {{-- Tambahkan CSS SweetAlert2 --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 @endpush
 
 @section('content')
@@ -30,6 +33,7 @@
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Nama Fasilitas</th> {{-- Tambahkan kolom ini --}}
                         <th>Gambar Ikon</th>
                         <th>Aksi</th>
                     </tr>
@@ -56,24 +60,14 @@
         <div class="modal-content">
             <span class="close-button">&times;</span>
             <h2 id="modalTitle">Tambah Fasilitas Baru</h2>
-            <form id="fasilitasForm" enctype="multipart/form-data">
-                <input type="hidden" id="fasilitasId">
-                <div class="form-group">
-                    <label for="namaFasilitas">Nama Fasilitas:</label>
-                    <input type="text" id="namaFasilitas" name="nama_fasilitas" required>
-                </div>
-                <div class="form-group">
-                    <label for="gambarIkon">Gambar Ikon:</label>
-                    <input type="file" id="gambarIkon" name="gambar_ikon" accept="image/*">
-                    <p class="current-image-info" id="currentImageInfo"></p>
-                    <img id="previewImage" src="" alt="Preview Ikon" style="max-width: 100px; max-height: 100px; margin-top: 10px; display: none;">
-                </div>
-                <button type="submit" class="btn btn-primary">Simpan</button>
-            </form>
+            {{-- Sertakan file _form.blade.php di sini --}}
+            @include('fasilitas._form')
         </div>
     </div>
 @endsection
 
 @push('scripts')
+    {{-- Tambahkan JS SweetAlert2 (sebelum script Anda sendiri) --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/fasilitas_script.js"></script>
 @endpush

@@ -1,5 +1,111 @@
 /* public/css/fasilitas.css */
 
+/* --- GAYA MODAL POP-UP --- */
+.modal {
+    display: none; /* Sembunyikan modal secara default */
+    position: fixed; /* Tetap di viewport saat scrolling */
+    z-index: 1000; /* Pastikan di atas elemen lain */
+    left: 0;
+    top: 0;
+    width: 100%; /* Lebar penuh */
+    height: 100%; /* Tinggi penuh */
+    overflow: auto; /* Aktifkan scroll jika konten terlalu panjang */
+    background-color: rgba(0,0,0,0.4); /* Background gelap transparan */
+    justify-content: center; /* Pusatkan konten modal secara horizontal (menggunakan display: flex) */
+    align-items: center; /* Pusatkan konten modal secara vertikal (menggunakan display: flex) */
+    padding: 20px; /* Sedikit padding untuk menjaga jarak dari tepi */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto; /* Otomatis tengah jika display block, tapi flex di atas sudah menanganinya */
+    padding: 30px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 90%; /* Lebar responsif */
+    max-width: 500px; /* Batasi lebar maksimum */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    position: relative; /* Untuk posisi tombol close */
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Animasi untuk modal */
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+.close-button {
+    color: #aaa;
+    float: right; /* Posisikan di kanan atas */
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute; /* Atur posisi absolut di dalam modal-content */
+    top: 10px;
+    right: 15px;
+    line-height: 1; /* Pastikan tinggi baris sesuai */
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Gaya untuk form di dalam modal */
+.modal-content h2 {
+    color: var(--text-color-dark);
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.modal-content .form-group {
+    margin-bottom: 15px;
+}
+
+.modal-content .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: var(--text-color-dark);
+}
+
+.modal-content .form-group input[type="text"],
+.modal-content .form-group input[type="file"] {
+    width: calc(100% - 22px); /* Kurangi padding dan border */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box; /* Sertakan padding dan border dalam lebar */
+}
+
+.modal-content .current-image-info {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+.modal-content .btn-primary {
+    background-color: var(--orange-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    width: 100%;
+    margin-top: 20px;
+    transition: background-color 0.2s ease;
+}
+
+.modal-content .btn-primary:hover {
+    background-color: var(--button-hover-color, #e08e00); /* Contoh default darker orange */
+}
+
 /* --- GAYA TABEL DARI KONSUMEN.CSS YANG ANDA BERIKAN --- */
 .table-responsive {
     width: 100%;
@@ -53,18 +159,109 @@ table tbody tr:last-child td {
     border-bottom: none;
 }
 
+/* Tambahkan atau perbarui bagian ini */
+.table-actions {
+    display: flex; /* Menggunakan flexbox untuk penataan horizontal */
+    justify-content: space-between; /* Ini yang akan mendorong elemen pertama (tombol Tambah) ke kiri dan elemen kedua (search-box) ke kanan */
+    align-items: center; /* Menyatakan item secara vertikal di tengah */
+    margin-bottom: 20px; /* Memberikan ruang di bawah elemen ini */
+    flex-wrap: wrap; /* Memungkinkan wrapping jika layar terlalu kecil */
+    gap: 10px; /* Jarak antar item jika wrapping atau pada layar kecil */
+}
+
+/* Search Box tetap di kanan */
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Jarak antara label, input, dan tombol */
+}
+
+.search-box label {
+    margin-right: 0; /* Hapus margin-right yang sebelumnya ada di search-section */
+    font-weight: bold;
+    color: var(--text-color-dark);
+}
+
+.search-box input[type="text"] {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    outline: none;
+    transition: border-color 0.2s ease;
+    min-width: 150px; /* Lebar minimum */
+}
+
+.search-box input[type="text"]:focus {
+    border-color: var(--orange-color);
+}
+
+.search-box button {
+    background-color: var(--orange-color);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.search-box button:hover {
+    background-color: var(--button-hover-color, #e08e00); /* Contoh default darker orange */
+}
+
 /* --- LEBAR KOLOM UNTUK FASILITAS (Penting untuk table-layout: fixed) --- */
 .data-table th:nth-child(1), /* ID */
 .data-table td:nth-child(1) {
-    width: 15%;
+    width: 10%;
 }
-.data-table th:nth-child(2), /* Gambar Ikon */
+.data-table th:nth-child(2), /* Nama Fasilitas */
 .data-table td:nth-child(2) {
-    width: 55%;
+    width: 35%;
 }
-.data-table th:nth-child(3), /* Aksi */
+.data-table th:nth-child(3), /* Gambar Ikon */
 .data-table td:nth-child(3) {
     width: 30%;
+}
+.data-table th:nth-child(4), /* Aksi */
+.data-table td:nth-child(4) {
+    width: 25%;
+}
+
+/* --- GAYA UNTUK TOMBOL AKSI (EDIT/DELETE) --- */
+.btn-action {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    margin-right: 5px;
+    transition: background-color 0.2s ease;
+    font-size: 0.9em;
+    min-width: 35px;
+    box-sizing: border-box;
+}
+
+.btn-action i {
+    font-size: 1.1em;
+}
+
+.btn-action.edit {
+    background-color: #007bff;
+}
+
+.btn-action.edit:hover {
+    background-color: #0056b3;
+}
+
+.btn-action.delete {
+    background-color: #dc3545;
+}
+
+.btn-action.delete:hover {
+    background-color: #c82333;
 }
 
 

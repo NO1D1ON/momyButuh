@@ -26,11 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Fungsi untuk mengisi fasilitas (akan dipanggil saat modal dibuka)
-      async function populateFasilitasCheckboxes(selectedFasilitasIds = []) {
+    async function populateFasilitasCheckboxes(selectedFasilitasIds = []) {
         try {
-            const response = await fetch('/api/fasilitas');
+            const response = await fetch('/api/fasilitas', {
+                headers: {
+                    'Accept': 'application/json' // Penting untuk memastikan respons JSON
+                }
+            });
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                // Tangani kasus di mana API fasilitas tidak merespons OK
+                const errorData = await response.json(); // Coba parse JSON jika ada
+                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
             }
             const fasilitasData = await response.json();
             fasilitasContainer.innerHTML = '';
@@ -61,6 +67,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     iconImg.src = fasilitas.full_gambar_url;
                     iconImg.alt = fasilitas.nama_fasilitas;
                     iconImg.classList.add('img-icon-small');
+                    iconImg.onerror = function() { // Tangani jika ikon fasilitas tidak ditemukan (404)
+                        this.onerror = null;
+                        this.src = 'https://via.placeholder.com/20x20?text=X'; // Placeholder kecil
+                        console.warn(`Ikon fasilitas tidak ditemukan untuk ID ${fasilitas.id}: ${fasilitas.full_gambar_url}`);
+                    };
                     label.appendChild(iconImg);
                 }
                 label.append(` ${fasilitas.nama_fasilitas}`);
@@ -71,26 +82,36 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         } catch (error) {
             console.error("Gagal mengambil data fasilitas:", error);
-            fasilitasContainer.innerHTML = '<p style="color: red;">Gagal memuat fasilitas.</p>';
+            fasilitasContainer.innerHTML = '<p style="color: red;">Gagal memuat fasilitas. Silakan coba refresh halaman.</p>';
+            // Gunakan SweetAlert2 untuk notifikasi error saat memuat fasilitas
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Memuat Fasilitas!',
+                text: `Terjadi kesalahan saat memuat daftar fasilitas: ${error.message}`,
+                showConfirmButton: true
+            });
         }
     }
 
-    // Fungsi baru untuk edit form
     // Fungsi fillEditForm
     async function fillEditForm(lapanganId) {
         try {
             console.log(`Mengambil data untuk edit lapangan ID: ${lapanganId}`);
-            const response = await fetch(`/api/lapangans/${lapanganId}`);
+            const response = await fetch(`/api/lapangans/${lapanganId}`, {
+                headers: {
+                    'Accept': 'application/json' // Penting untuk memastikan respons JSON
+                }
+            });
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const errorData = await response.json(); // Coba parse JSON jika ada
+                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
             }
             const lapanganData = await response.json();
-            console.log("Data lapangan untuk edit:", lapanganData); // Pastikan data di sini lengkap dan benar
+            console.log("Data lapangan untuk edit:", lapanganData);
 
             // Set ID lapangan yang sedang diedit
             editingLapanganId = lapanganData.id;
 
-            // Mendapatkan referensi ke elemen-elemen form dan mengisinya
             const formElements = {
                 nama_lapangan: document.getElementById('nama_lapangan'),
                 lokasi: document.getElementById('lokasi'),
@@ -98,44 +119,47 @@ document.addEventListener('DOMContentLoaded', () => {
                 rating: document.getElementById('rating'),
                 deskripsi_lapangan: document.getElementById('deskripsi_lapangan'),
                 status_aktif: document.getElementById('status_aktif'),
+                // Tambahkan field untuk gambar_lapangan jika ada di form Anda
+                // gambar_lapangan: document.getElementById('gambar_lapangan'), // Contoh jika ada input file
             };
 
-            // Loop melalui elemen form dan isi nilainya
             for (const id in formElements) {
                 const element = formElements[id];
-                if (element) { // Pastikan elemen ditemukan sebelum mencoba mengisi
-                    console.log(`Mengisi ${id} dengan nilai:`, lapanganData[id]); // DEBUG: Cek apa yang akan diisi
+                if (element) {
+                    console.log(`Mengisi ${id} dengan nilai:`, lapanganData[id]);
                     if (id === 'status_aktif') {
                         element.value = lapanganData[id] ? '1' : '0';
                     } else {
-                        element.value = lapanganData[id] || ''; // Gunakan || '' untuk menghindari undefined/null
+                        element.value = lapanganData[id] || '';
                     }
                 } else {
-                    // DEBUG KRITIS: Jika ini muncul di konsol, berarti elemen tidak ditemukan!
                     console.error(`Elemen dengan ID "${id}" tidak ditemukan di DOM saat mencoba mengisi form edit.`);
-                    // Anda bisa throw error atau return di sini jika elemen sangat krusial
                     throw new Error(`Elemen form penting tidak ditemukan: ${id}`);
                 }
             }
 
             // Menangani fasilitas (memilih checkbox yang sudah ada)
-            const selectedFasilitasIds = lapanganData.fasilitas ? lapanganData.fasilitas.map(f => f.id) : [];
+            const selectedFasilitasIds = lapanganData.fasilitas ? lapanganData.fasilitas.map(f => f.id_fasilitas) : []; // Perhatikan 'id_fasilitas'
             await populateFasilitasCheckboxes(selectedFasilitasIds);
 
-            // Ubah judul modal
-            const modalTitleElement = document.getElementById('modalTitle'); // Cari berdasarkan ID baru
+            const modalTitleElement = document.getElementById('modalTitle');
             if(modalTitleElement) {
                 modalTitleElement.textContent = `Edit Lapangan: ${lapanganData.nama_lapangan}`;
             } else {
-                console.warn("Elemen judul modal dengan ID 'modalTitle' tidak ditemukan."); // Pesan peringatan baru
+                console.warn("Elemen judul modal dengan ID 'modalTitle' tidak ditemukan.");
             }
-
-
 
         } catch (error) {
             console.error('Gagal memuat data lapangan untuk edit:', error);
-            alert(`Gagal memuat data lapangan untuk edit: ${error.message}`);
-            addLapanganModal.style.display = 'none'; // Sembunyikan modal jika gagal memuat data
+            // Ganti alert dengan SweetAlert2
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: `Gagal memuat data lapangan untuk edit: ${error.message}`,
+                showConfirmButton: true
+            }).then(() => {
+                addLapanganModal.style.display = 'none'; // Sembunyikan modal jika gagal memuat data
+            });
         }
     }
 
@@ -158,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-        // Fungsi renderTableData
+    // Fungsi renderTableData
     function renderTableData(data) {
         dataTableBody.innerHTML = '';
 
@@ -201,9 +225,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const tdGambar = document.createElement('td');
             const img = document.createElement('img');
-            img.src = lapangan.full_gambar_url;
+            img.src = lapangan.full_gambar_url; // URL gambar lapangan
             img.alt = lapangan.nama_lapangan;
             img.classList.add('img-thumbnail');
+            img.onerror = function() { // Tangani jika gambar tidak ditemukan (404)
+                this.onerror = null; // Mencegah looping error
+                this.src = 'https://via.placeholder.com/50x50?text=No+Image'; // Gambar placeholder
+                console.warn(`Gambar tidak ditemukan untuk lapangan ID ${lapangan.id}: ${lapangan.full_gambar_url}`);
+            };
             tdGambar.appendChild(img);
             row.appendChild(tdGambar);
 
@@ -220,6 +249,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         iconImg.src = f.full_gambar_url;
                         iconImg.alt = f.nama_fasilitas;
                         iconImg.classList.add('img-icon-small');
+                        iconImg.onerror = function() { // Tangani jika ikon fasilitas tidak ditemukan (404)
+                            this.onerror = null;
+                            this.src = 'https://via.placeholder.com/20x20?text=X'; // Placeholder kecil
+                            console.warn(`Ikon fasilitas tidak ditemukan untuk ID ${f.id_fasilitas}: ${f.full_gambar_url}`); // Menggunakan id_fasilitas
+                        };
                         p.appendChild(iconImg);
                         p.append(` ${f.nama_fasilitas}`);
                     } else {
@@ -256,10 +290,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log(`--- Tombol Edit diklik untuk Lapangan ID: ${lapangan.id} ---`);
                 addLapanganModal.style.display = 'flex'; // Tampilkan modal
 
-                // --- PERUBAHAN DI SINI: Panggil fillEditForm dengan setTimeout ---
-                setTimeout(() => {
-                    fillEditForm(lapangan.id);
-                }, 0); // Delay 0ms, ini hanya untuk memastikan event loop sudah kosong
+                // --- Panggil fillEditForm tanpa setTimeout, SweetAlert akan menangani asinkronisitas ---
+                fillEditForm(lapangan.id);
             });
 
             const deleteBtn = document.createElement('a');
@@ -270,30 +302,59 @@ document.addEventListener('DOMContentLoaded', () => {
             deleteBtn.addEventListener('click', async (e) => {
                 e.preventDefault();
                 console.log(`--- Tombol Delete diklik untuk Lapangan ID: ${lapangan.id} ---`);
-                if (confirm(`Apakah Anda yakin ingin menghapus lapangan "${lapangan.nama_lapangan}"?`)) {
-                    try {
-                        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-                        const response = await fetch(`/api/lapangans/${lapangan.id}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': csrfToken,
-                                'Content-Type': 'application/json'
+                // Ganti confirm dengan SweetAlert2
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: `Anda tidak akan bisa mengembalikan lapangan "${lapangan.nama_lapangan}" ini!`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        try {
+                            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                            const response = await fetch(`/api/lapangans/${lapangan.id}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken,
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json' // Penting untuk memastikan respons JSON
+                                }
+                            });
+
+                            if (!response.ok) {
+                                const errorData = await response.json();
+                                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
                             }
-                        });
 
-                        if (!response.ok) {
-                            const errorData = await response.json();
-                            throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+                            // Ganti alert sukses dengan SweetAlert2
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Dihapus!',
+                                text: 'Lapangan berhasil dihapus.',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                fetchDataLapangan(); // Muat ulang data
+                            });
+
+                        } catch (error) {
+                            console.error('Gagal menghapus lapangan:', error);
+                            // Ganti alert error dengan SweetAlert2
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal!',
+                                text: `Gagal menghapus lapangan: ${error.message}`,
+                                showConfirmButton: true
+                            });
                         }
-
-                        alert('Lapangan berhasil dihapus!');
-                        fetchDataLapangan();
-                    } catch (error) {
-                        console.error('Gagal menghapus lapangan:', error);
-                        alert(`Gagal menghapus lapangan: ${error.message}`);
                     }
-                }
+                });
             });
 
             tdAksi.appendChild(editBtn);
@@ -308,21 +369,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fungsi fetchDataLapangan dengan dukungan search
     async function fetchDataLapangan(searchTerm = '') {
         try {
-            console.log("Fetching data lapangan..."); // DEBUG 9
+            console.log("Fetching data lapangan...");
             let url = '/api/lapangans';
             if (searchTerm) {
                 url += `?search=${encodeURIComponent(searchTerm)}`;
             }
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                headers: {
+                    'Accept': 'application/json' // Penting untuk memastikan respons JSON
+                }
+            });
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const errorData = await response.json(); // Coba parse JSON jika ada
+                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            console.log("Data lapangan berhasil diambil:", data); // DEBUG 10
+            console.log("Data lapangan berhasil diambil:", data);
             renderTableData(data);
         } catch (error) {
-            console.error("Gagal mengambil data lapangan:", error); // DEBUG 11
+            console.error("Gagal mengambil data lapangan:", error);
             dataTableBody.innerHTML = '<tr><td colspan="10" style="text-align: center; color: red;">Gagal memuat data. Silakan coba lagi.</td></tr>';
+            // Ganti alert/pesan error loading dengan SweetAlert2
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Memuat Data!',
+                text: `Terjadi kesalahan saat memuat data lapangan: ${error.message}`,
+                showConfirmButton: true
+            });
         }
     }
 
@@ -330,28 +403,38 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchDataLapangan();
 
     // Event listener untuk tombol "Tambah Lapangan"
-   if (addLapanganBtn) {
+    if (addLapanganBtn) {
         addLapanganBtn.addEventListener('click', () => {
             console.log('Tombol "Tambah Lapangan" diklik.');
             editingLapanganId = null; // Set ID lapangan yang diedit menjadi null untuk mode tambah
             addLapanganModal.style.display = 'flex'; // Tampilkan modal
-            populateFasilitasCheckboxes(); // Isi fasilitas saat modal dibuka
-            document.querySelector('#addLapanganModal h3').textContent = 'Tambah Lapangan Baru'; // Set judul
-            addLapanganForm.reset(); // Pastikan form bersih saat membuka untuk tambah
+            populateFasilitasCheckboxes(); // Isi fasilitas saat modal dibuka (kosongkan pilihan sebelumnya)
             const modalTitleElement = document.getElementById('modalTitle');
             if(modalTitleElement) {
                 modalTitleElement.textContent = 'Tambah Lapangan Baru'; // Gunakan ID baru
             }
+            addLapanganForm.reset(); // Pastikan form bersih saat membuka untuk tambah
+            // Reset URL gambar dan info gambar saat ini (jika ada)
+            // Jika ada elemen untuk gambar utama lapangan, pastikan juga di-reset
+            const currentImagePreview = document.getElementById('currentImagePreview'); // Asumsi ada elemen ini
+            if (currentImagePreview) {
+                currentImagePreview.innerHTML = ''; // Kosongkan pratinjau gambar utama
+            }
         });
     }
 
-     // Event listener untuk tombol penutup modal (X dan Batal)
+    // Event listener untuk tombol penutup modal (X dan Batal)
     closeModalButtons.forEach(button => {
         button.addEventListener('click', () => {
             console.log('Tombol penutup modal diklik.');
             addLapanganModal.style.display = 'none'; // Sembunyikan modal
             addLapanganForm.reset(); // Reset form saat ditutup
             editingLapanganId = null; // Reset ID lapangan yang diedit saat modal ditutup
+            // Reset URL gambar dan info gambar saat ini (jika ada)
+            const currentImagePreview = document.getElementById('currentImagePreview'); // Asumsi ada elemen ini
+            if (currentImagePreview) {
+                currentImagePreview.innerHTML = ''; // Kosongkan pratinjau gambar utama
+            }
         });
     });
 
@@ -362,6 +445,11 @@ document.addEventListener('DOMContentLoaded', () => {
             addLapanganModal.style.display = 'none';
             addLapanganForm.reset();
             editingLapanganId = null; // Reset ID lapangan yang diedit saat modal ditutup
+            // Reset URL gambar dan info gambar saat ini (jika ada)
+            const currentImagePreview = document.getElementById('currentImagePreview'); // Asumsi ada elemen ini
+            if (currentImagePreview) {
+                currentImagePreview.innerHTML = ''; // Kosongkan pratinjau gambar utama
+            }
         }
     });
 
@@ -377,7 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (editingLapanganId) {
             url = `/api/lapangans/${editingLapanganId}`;
-            method = 'POST';
+            method = 'POST'; // Tetap POST karena FormData dengan _method=PUT
             formData.append('_method', 'PUT');
             console.log(`[DEBUG SUBMIT] URL untuk UPDATE: ${url}`);
             console.log(`[DEBUG SUBMIT] Metode untuk UPDATE: ${method}`);
@@ -392,12 +480,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: method,
                 body: formData,
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json' // Penting untuk memastikan respons JSON
                 }
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
+                const errorData = await response.json(); // Coba parse error JSON
                 let errorMessage = errorData.message || `HTTP error! status: ${response.status}`;
                 if (errorData.errors) {
                     errorMessage += "\n\nDetail Error:";
@@ -409,14 +498,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const successMessage = editingLapanganId ? 'Lapangan berhasil diperbarui!' : 'Lapangan berhasil ditambahkan!';
-            alert(successMessage);
-            addLapanganModal.style.display = 'none';
-            addLapanganForm.reset();
-            editingLapanganId = null; // Pastikan direset setelah submit
-            fetchDataLapangan(); // Muat ulang data tabel
+            // Ganti alert sukses dengan SweetAlert2
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: successMessage,
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                addLapanganModal.style.display = 'none';
+                addLapanganForm.reset();
+                editingLapanganId = null;
+                fetchDataLapangan(); // Muat ulang data tabel
+            });
+
         } catch (error) {
-            console.error('Gagal menyimpan lapangan:', error); // Ubah pesan error
-            alert(`Gagal menyimpan lapangan: ${error.message}`);
+            console.error('Gagal menyimpan lapangan:', error);
+            // Ganti alert error dengan SweetAlert2
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: `Gagal menyimpan lapangan: ${error.message}`,
+                showConfirmButton: true
+            });
         }
     });
 

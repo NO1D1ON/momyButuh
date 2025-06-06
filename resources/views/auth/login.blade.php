@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}?v=1.0">
     <title>Admin Login</title>
     {{-- Memuat CSS dari folder public/css --}}
     <link rel="stylesheet" href="/css/login.css">

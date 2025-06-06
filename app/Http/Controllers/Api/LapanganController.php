@@ -27,7 +27,7 @@ class LapanganController extends Controller
                 'full_gambar_url' => $lapangan->gambar_lapangan ? asset('assets/lapangan/' . $lapangan->gambar_lapangan) : null,
                 'fasilitas' => $lapangan->fasilitas->map(function ($fasilitas) {
                     return [
-                        'id_fasilitas' => $fasilitas->id,
+                        'id_fasilitas' => $fasilitas->id, // Menggunakan 'id' dari model Fasilitas
                         'nama_fasilitas' => $fasilitas->nama_fasilitas,
                         'gambar_ikon' => $fasilitas->gambar_ikon,
                         'full_gambar_url' => $fasilitas->gambar_ikon ? asset('assets/fasilitas/' . $fasilitas->gambar_ikon) : null,
@@ -43,7 +43,8 @@ class LapanganController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_lapangan' => 'required|string|max:255',
+            // Tambahkan aturan unique untuk nama_lapangan saat menyimpan baru
+            'nama_lapangan' => 'required|string|max:255|unique:lapangans,nama_lapangan',
             'lokasi' => 'required|string|max:255',
             'harga_lapangan' => 'required|integer',
             'rating' => 'nullable|numeric|min:0|max:5',
@@ -51,17 +52,18 @@ class LapanganController extends Controller
             'gambar_lapangan' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status_aktif' => 'boolean',
             'fasilitas' => 'nullable|array',
-            'fasilitas.*' => 'exists:fasilitas,id',
+            'fasilitas.*' => 'exists:fasilitas,id', // Memastikan ID fasilitas ada di tabel fasilitas
         ]);
 
         $gambarFileName = null;
         if ($request->hasFile('gambar_lapangan')) {
             $image = $request->file('gambar_lapangan');
-            $gambarFileName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension(); // Lebih aman dengan Str::random
+            $gambarFileName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('assets/lapangan'), $gambarFileName);
         }
 
         $lastLapangan = Lapangan::orderBy('id_lapangan', 'desc')->first();
+        // Pastikan Anda mem-parse id_lapangan dengan benar, misalnya 'LP001' -> 1
         $nextIdNumber = $lastLapangan ? (int) substr($lastLapangan->id_lapangan, 2) + 1 : 1;
         $idLapangan = 'LP' . str_pad($nextIdNumber, 3, '0', STR_PAD_LEFT);
 
@@ -69,7 +71,7 @@ class LapanganController extends Controller
             'id_lapangan' => $idLapangan,
             'nama_lapangan' => $request->nama_lapangan,
             'lokasi' => $request->lokasi,
-            'harga_lapangan' => $request->harga_lapangan ?? 0, // Default value
+            'harga_lapangan' => $request->harga_lapangan ?? 0,
             'rating' => $request->rating ?? 0.0,
             'deskripsi_lapangan' => $request->deskripsi_lapangan,
             'gambar_lapangan' => $gambarFileName,
@@ -82,13 +84,14 @@ class LapanganController extends Controller
 
         return response()->json([
             'message' => 'Lapangan berhasil ditambahkan',
-            'data' => $lapangan->load('fasilitas')->toArray() // Load relasi & konversi ke array
+            'data' => $lapangan->load('fasilitas')->toArray()
         ], 201);
     }
 
     public function show($id)
     {
-        $lapangan = Lapangan::with('fasilitas')->find($id);
+        // Gunakan where('id_lapangan', $id) karena primary key adalah id_lapangan
+        $lapangan = Lapangan::with('fasilitas')->where('id_lapangan', $id)->first();
 
         if (!$lapangan) {
             return response()->json(['message' => 'Lapangan tidak ditemukan'], 404);
@@ -117,24 +120,27 @@ class LapanganController extends Controller
         return response()->json($formattedLapangan);
     }
 
-    public function update(Request $request, $id) // Pastikan parameter $id ada
+    public function update(Request $request, $id)
     {
-        $lapangan = Lapangan::find($id); // Laravel akan menemukan berdasarkan id_lapangan karena primaryKey
+        // Temukan lapangan berdasarkan id_lapangan, bukan id
+        $lapangan = Lapangan::where('id_lapangan', $id)->first();
 
         if (!$lapangan) {
             return response()->json(['message' => 'Lapangan tidak ditemukan'], 404);
         }
 
         $request->validate([
-            'nama_lapangan' => 'required|string|max:255',
+            // PERBAIKAN UTAMA: Tambahkan primary key column 'id_lapangan'
+            'nama_lapangan' => 'required|string|max:255|unique:lapangans,nama_lapangan,' . $lapangan->id_lapangan . ',id_lapangan',
             'lokasi' => 'required|string|max:255',
             'harga_lapangan' => 'required|integer',
             'rating' => 'nullable|numeric|min:0|max:5',
             'deskripsi_lapangan' => 'nullable|string',
             'gambar_lapangan' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status_aktif' => 'boolean',
-            'fasilitas' => 'nullable|array', // Pastikan ini 'fasilitas', bukan 'fasilitas_ids'
-            'fasilitas.*' => 'exists:fasilitas,id', // Pastikan ini 'fasilitas.*'
+            'fasilitas' => 'nullable|array',
+            'fasilitas.*' => 'exists:fasilitas,id',
+            'clear_gambar_lapangan' => 'nullable|boolean' // Tambahkan ini jika Anda akan mengirimkan flag untuk menghapus gambar
         ]);
 
         $gambarFileName = $lapangan->gambar_lapangan;
@@ -145,7 +151,13 @@ class LapanganController extends Controller
             $image = $request->file('gambar_lapangan');
             $gambarFileName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('assets/lapangan'), $gambarFileName);
+        } elseif ($request->boolean('clear_gambar_lapangan')) { // Jika flag clear_gambar_lapangan true
+            if ($gambarFileName && file_exists(public_path('assets/lapangan/' . $gambarFileName))) {
+                unlink(public_path('assets/lapangan/' . $gambarFileName));
+            }
+            $gambarFileName = null; // Set nama file menjadi null
         }
+
 
         $lapangan->update([
             'nama_lapangan' => $request->nama_lapangan,
@@ -157,9 +169,10 @@ class LapanganController extends Controller
             'status_aktif' => $request->status_aktif ?? $lapangan->status_aktif,
         ]);
 
-        if ($request->has('fasilitas')) { // Pastikan ini 'fasilitas'
-            $lapangan->fasilitas()->sync($request->fasilitas); // Pastikan ini 'fasilitas'
+        if ($request->has('fasilitas')) {
+            $lapangan->fasilitas()->sync($request->fasilitas);
         } else {
+            // Detach semua fasilitas jika tidak ada yang dipilih (misalnya semua checkbox tidak dicentang)
             $lapangan->fasilitas()->detach();
         }
 
@@ -171,7 +184,8 @@ class LapanganController extends Controller
     
     public function destroy($id)
     {
-        $lapangan = Lapangan::find($id);
+        // Gunakan where('id_lapangan', $id) karena primary key adalah id_lapangan
+        $lapangan = Lapangan::where('id_lapangan', $id)->first();
 
         if (!$lapangan) {
             return response()->json(['message' => 'Lapangan tidak ditemukan'], 404);
@@ -181,6 +195,9 @@ class LapanganController extends Controller
             unlink(public_path('assets/lapangan/' . $lapangan->gambar_lapangan));
         }
 
+        // Sebelum menghapus lapangan, lepaskan semua relasi fasilitasnya
+        $lapangan->fasilitas()->detach(); 
+        
         $lapangan->delete();
 
         return response()->json(['message' => 'Lapangan berhasil dihapus']);

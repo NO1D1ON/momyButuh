@@ -21,5 +21,9 @@ Route::get('/lapangans/{id}', [LapanganController::class, 'show']); // Untuk amb
 Route::put('/lapangans/{id}', [LapanganController::class, 'update']); // Untuk update lapangan (BARU DITAMBAHKAN)
 Route::delete('/lapangans/{id}', [LapanganController::class, 'destroy']); // Untuk hapus lapangan (sudah ada)
 
-Route::get('/fasilitas', [FasilitasController::class, 'index']);
+Route::get('/fasilitas', [FasilitasController::class, 'index']); // Mengambil semua fasilitas
+Route::post('/fasilitas', [FasilitasController::class, 'store']); // Menambahkan fasilitas baru
+Route::get('/fasilitas/{id}', [FasilitasController::class, 'show']); // Mengambil fasilitas berdasarkan ID
+Route::put('/fasilitas/{id}', [FasilitasController::class, 'update']); // Memperbarui fasilitas
+Route::delete('/fasilitas/{id}', [FasilitasController::class, 'destroy']); // Menghapus fasilitas
 
