@@ -15,7 +15,7 @@
     --success-color: #28a745;
     --danger-color: #dc3545;
     --info-color: #007bff;
-    --button-hover-color: #e08e1b; /* Menambahkan ini untuk hover umum */
+    --button-hover-color: #e08e1b;
 }
 
 body {
@@ -331,7 +331,7 @@ body {
     text-align: center;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
     .sidebar {
         width: var(--sidebar-width-expanded);
         transform: translateX(0);
