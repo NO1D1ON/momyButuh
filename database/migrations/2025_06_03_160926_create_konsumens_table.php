@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('konsumens', function (Blueprint $table) {
-            $table->id(); // ID Konsumen (No Identitas bisa jadi string terpisah)
-            $table->string('no_identitas')->unique(); // USR1, USR2, dll.
+            $table->string('no_identitas')->primary(); // ID kustom seperti 'LP001'
+            // $table->id(); // ID Konsumen (No Identitas bisa jadi string terpisah)
+            // $table->string('no_identitas')->unique(); // USR1, USR2, dll.
             $table->string('nama');
             $table->string('email')->unique();
             $table->string('no_telepon')->nullable();

@@ -331,7 +331,7 @@ body {
     text-align: center;
 }
 
-@media (max-width: 1200px) {
+/* @media (max-width: 20%) {
     .sidebar {
         width: var(--sidebar-width-expanded);
         transform: translateX(0);
@@ -340,4 +340,4 @@ body {
     .content {
         margin-left: var(--sidebar-width-expanded);
     }
-}
+} */

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\KonsumenApiController; // Import API Controller
 use App\Http\Controllers\Api\LapanganController; // Import API Controller
 use App\Http\Controllers\Api\FasilitasController; // Import API Controller
+// use App\Http\Controllers\Api\PemesananController; // Import API Controller
+use App\Http\Controllers\PemesananController;
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -27,3 +29,9 @@ Route::get('/fasilitas/{id}', [FasilitasController::class, 'show']); // Mengambi
 Route::put('/fasilitas/{id}', [FasilitasController::class, 'update']); // Memperbarui fasilitas
 Route::delete('/fasilitas/{id}', [FasilitasController::class, 'destroy']); // Menghapus fasilitas
 
+
+//Api Pemesanan
+// Rute untuk MENGAMBIL data pemesanan (GET request)
+Route::get('/pemesanan', [PemesananController::class, 'indexApi']); // Kita akan buat method indexApi
+// Rute untuk MENYIMPAN data pemesanan (POST request)
+Route::post('/pemesanan', [PemesananController::class, 'store']);

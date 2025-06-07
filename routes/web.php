@@ -5,6 +5,8 @@ use App\Http\Controllers\KonsumenController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LapanganController;
 use App\Http\Controllers\FasilitasController;
+use App\Http\Controllers\PemesananController;
+
 
 Route::get('login', [UserController::class, 'showLoginForm'])->name('login');
 Route::post('login', [UserController::class, 'login'])->name('auth.login');
@@ -17,7 +19,6 @@ Route::get('dashboard', [UserController::class, 'showHome'])->name('dashboard');
 Route::get('logout', [UserController::class, 'logout'])->name('logout');
 
 Route::get('informasi', [UserController::class, 'showInformasi'])->name('informasi');
-Route::get('pemesanan', [UserController::class, 'showPemesanan'])->name('pemesanan');
 Route::get('pembayaran', [UserController::class, 'showPembayaran'])->name('pembayaran');
 Route::get('konsumen', [KonsumenController::class, 'index'])->name('konsumen');
 
@@ -26,5 +27,7 @@ Route::get('/lapangan', [LapanganController::class, 'index'])->name('lapangan.in
 
 // Rute untuk halaman Data Fasilitas
 Route::get('/fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
+
+Route::get('/pemesanan', [PemesananController::class, 'index'])->name('pemesanan');
 
 });
