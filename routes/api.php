@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\LapanganController; // Import API Controller
 use App\Http\Controllers\Api\FasilitasController; // Import API Controller
 // use App\Http\Controllers\Api\PemesananController; // Import API Controller
 use App\Http\Controllers\PemesananController;
+use App\Http\Controllers\Api\TopupApiController;
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -35,3 +36,12 @@ Route::delete('/fasilitas/{id}', [FasilitasController::class, 'destroy']); // Me
 Route::get('/pemesanan', [PemesananController::class, 'indexApi']); // Kita akan buat method indexApi
 // Rute untuk MENYIMPAN data pemesanan (POST request)
 Route::post('/pemesanan', [PemesananController::class, 'store']);
+
+// Top UP
+// Rute untuk Top Up dari Mobile App (Flutter)
+Route::post('/topup', [TopupApiController::class, 'store']);
+
+// Rute untuk konfirmasi Top Up dari Web Admin
+Route::patch('/topup/{id}/confirm', [TopupApiController::class, 'confirm'])->middleware('auth:sanctum'); // Atau 'auth' kalo admin login pake session web
+// Api Untuk uji coba top melalui postman
+// Route::patch('/topup/{id}/confirm', [TopupApiController::class, 'confirm']); //->middleware('auth:sanctum'); // 

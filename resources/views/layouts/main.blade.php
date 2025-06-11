@@ -39,6 +39,7 @@
                     <li id="menu-fasilitas"><a href="{{ route('fasilitas.index') }}"><span><i class="fa-solid fa-building"></i> Data Fasilitas</span></a></li>
                     <li id="menu-pemesanan"><a href="{{ route('pemesanan') }}"><span><i class="fa-solid fa-clipboard-list"></i> Data Pemesanan</span></a></li>
                     <li id="menu-pembayaran"><a href="{{ route('pembayaran') }}"><span><i class="fa-solid fa-credit-card"></i> Data Pembayaran</span></a></li>
+                    <li id="menu-topup"><a href="{{ route('topup') }}"><span><i class="fa-solid fa-credit-card"></i> Top Up</span></a></li>
                 </ul>
                 <div class="nav-section-title">TENTANG</div>
                 <ul>
@@ -65,6 +66,8 @@
     </div>
 
     <script src="/js/dashboard.js"></script>
+    {{-- TAMBAHKAN SCRIPT SWEETALERT2 DI SINI --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @stack('scripts')
 </body>
 </html>

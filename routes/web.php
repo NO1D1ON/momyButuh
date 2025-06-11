@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LapanganController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\PemesananController;
+use App\Http\Controllers\TopupController;
+
+
 
 
 Route::get('login', [UserController::class, 'showLoginForm'])->name('login');
@@ -30,4 +33,7 @@ Route::get('/fasilitas', [FasilitasController::class, 'index'])->name('fasilitas
 
 Route::get('/pemesanan', [PemesananController::class, 'index'])->name('pemesanan');
 
+
+// Rute untuk menampilkan halaman daftar top up
+Route::get('/topup', [TopupController::class, 'index'])->name('topup');
 });
