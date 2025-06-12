@@ -78,12 +78,19 @@
 
 
 @push('scripts')
+{{-- SweetAlert2 Library --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const confirmButtons = document.querySelectorAll('.btn-confirm');
 
     confirmButtons.forEach(button => {
-        button.addEventListener('click', function () {
+        // PERBAIKAN #1: Tambahkan parameter 'event' pada fungsi listener.
+        button.addEventListener('click', function (event) {
+            // PERBAIKAN #2: Panggil event.preventDefault() untuk mencegah aksi default browser.
+            event.preventDefault(); 
+            
             const topupId = this.dataset.id;
 
             Swal.fire({
@@ -99,11 +106,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (result.isConfirmed) {
                     Swal.fire({
                         title: 'Memproses...',
+                        text: 'Mohon tunggu sebentar.',
                         allowOutsideClick: false,
                         didOpen: () => { Swal.showLoading() }
                     });
 
-                    // INI BAGIAN YANG DIPERBAIKI (URL-NYA TANPA /api)
                     fetch(`/topup/${topupId}/confirm`, {
                         method: 'PATCH',
                         headers: {
@@ -113,33 +120,34 @@ document.addEventListener('DOMContentLoaded', function () {
                         },
                     })
                     .then(response => {
+                        // PERBAIKAN #3: Penanganan error yang lebih baik.
+                        // Coba parse JSON error dari server untuk pesan yang lebih spesifik.
                         if (!response.ok) {
-                            throw new Error('Network response was not ok');
+                            return response.json().then(err => { throw err; });
                         }
                         return response.json();
                     })
                     .then(data => {
-                        const statusBadge = document.getElementById(`status-${topupId}`);
-                        if (statusBadge) {
-                            statusBadge.textContent = data.data.status;
-                            statusBadge.classList.remove('status-pending');
-                            statusBadge.classList.add('status-berhasil');
-                        }
-                        // 'this' di dalam .then bisa beda, jadi kita cari lagi tombolnya
-                        document.querySelector(`.btn-confirm[data-id="${topupId}"]`).remove();
-
+                        // PERBAIKAN #4: Ganti update manual dengan reload halaman.
+                        // Ini lebih sederhana dan lebih andal untuk memastikan data konsisten.
                         Swal.fire({
                             title: 'Berhasil!',
-                            text: `Top up ${topupId} telah dikonfirmasi.`,
+                            text: data.message || 'Top up telah berhasil dikonfirmasi.',
                             icon: 'success',
-                            timer: 2000,
+                            timer: 2000, // Popup akan hilang setelah 2 detik
                             showConfirmButton: false
+                        }).then(() => {
+                            // Muat ulang halaman untuk melihat data terbaru.
+                            location.reload(); 
                         });
                     })
-                    .catch((error) => {
+                    .catch(error => {
+                        // Menangkap semua jenis error (network, server, dll)
+                        // dan menampilkan pesan error dari server jika ada.
                         Swal.fire({
-                            title: 'Oops...',
-                            text: 'Terjadi kesalahan saat mengkonfirmasi top up!',
+                            title: 'Oops... Terjadi Kesalahan',
+                            // Gunakan pesan error dari server jika tersedia, jika tidak, gunakan pesan default.
+                            text: error.message || 'Tidak dapat memproses permintaan Anda.',
                             icon: 'error'
                         });
                     });

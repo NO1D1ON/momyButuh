@@ -38,6 +38,6 @@ Route::get('/pemesanan', [PemesananController::class, 'index'])->name('pemesanan
 // Rute untuk menampilkan halaman daftar top up
 Route::get('/topup', [TopupController::class, 'index'])->name('topup');
 // TAMBAHKAN INI DI routes/web.php
-// Route::patch('/topup/{id}/confirm', [\App\Http\Controllers\Api\TopupApiController::class, 'confirm'])->middleware('auth');
-Route::patch('/topup/{id}/confirm', [TopupApiController::class, 'confirm']); //->middleware('auth:sanctum'); //
+Route::patch('/topup/{id}/confirm', [TopupApiController::class, 'confirm'])->middleware('auth');
+
 });

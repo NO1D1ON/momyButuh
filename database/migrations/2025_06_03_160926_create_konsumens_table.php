@@ -13,12 +13,10 @@ return new class extends Migration
     {
         Schema::create('konsumens', function (Blueprint $table) {
             $table->string('no_identitas')->primary(); // ID kustom seperti 'LP001'
-            // $table->id(); // ID Konsumen (No Identitas bisa jadi string terpisah)
-            // $table->string('no_identitas')->unique(); // USR1, USR2, dll.
             $table->string('nama');
             $table->string('email')->unique();
             $table->string('no_telepon')->nullable();
-            $table->decimal('saldo', 15, 2)->default(0)->after('no_telepon');
+            $table->decimal('saldo', 15, 2)->default(0);
             $table->string('password'); // Password dari mobile, akan di-hash
             $table->timestamps(); // created_at dan updated_at
         });
