@@ -18,13 +18,13 @@ class KonsumenApiController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input dari aplikasi mobile
+        // Validasi HANYA input yang dikirim dari pengguna
         $validator = Validator::make($request->all(), [
-            'no_identitas' => 'required|string|unique:konsumens,no_identitas|max:255',
+            // 'no_identitas' DIHAPUS dari sini
             'nama' => 'required|string|max:255',
             'email' => 'required|string|email|unique:konsumens,email|max:255',
             'no_telepon' => 'nullable|string|max:20',
-            'password' => 'required|string|min:6', // Password akan di-hash
+            'password' => 'required|string|min:6',
         ]);
 
         if ($validator->fails()) {
@@ -36,19 +36,22 @@ class KonsumenApiController extends Controller
         }
 
         try {
-            $konsumen = Konsumen::create([
-                'no_identitas' => $request->no_identitas,
-                'nama' => $request->nama,
-                'email' => $request->email,
-                'no_telepon' => $request->no_telepon,
-                'password' => Hash::make($request->password), // HASH PASSWORD
-            ]);
+            // Ambil semua data yang sudah tervalidasi
+            $validatedData = $validator->validated();
+
+            // Hash password secara manual
+            $validatedData['password'] = Hash::make($validatedData['password']);
+
+            // Gunakan $validatedData untuk membuat konsumen baru.
+            // Kolom 'no_identitas' akan diisi secara otomatis oleh Model.
+            $konsumen = Konsumen::create($validatedData);
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Konsumen registered successfully',
-                'data' => $konsumen // Mengembalikan data konsumen yang baru dibuat
+                'data' => $konsumen
             ], 201); // 201 Created
+
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
