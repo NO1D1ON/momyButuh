@@ -7,6 +7,7 @@ use App\Http\Controllers\LapanganController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\PemesananController;
 use App\Http\Controllers\TopupController;
+use App\Http\Controllers\Api\TopupApiController;
 
 
 
@@ -36,4 +37,7 @@ Route::get('/pemesanan', [PemesananController::class, 'index'])->name('pemesanan
 
 // Rute untuk menampilkan halaman daftar top up
 Route::get('/topup', [TopupController::class, 'index'])->name('topup');
+// TAMBAHKAN INI DI routes/web.php
+// Route::patch('/topup/{id}/confirm', [\App\Http\Controllers\Api\TopupApiController::class, 'confirm'])->middleware('auth');
+Route::patch('/topup/{id}/confirm', [TopupApiController::class, 'confirm']); //->middleware('auth:sanctum'); //
 });

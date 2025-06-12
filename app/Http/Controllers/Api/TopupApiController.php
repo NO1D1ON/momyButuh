@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Topup;
 use App\Models\Konsumen;
 use Illuminate\Support\Facades\Validator;
+// Jangan lupa import DB facade
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class TopupApiController extends Controller
 {
@@ -41,42 +44,90 @@ class TopupApiController extends Controller
     /**
      * Endpoint untuk konfirmasi pembayaran oleh Admin dari web.
      */
+    // public function confirm(Request $request, $id)
+    // {
+    //     $topup = Topup::find($id);
+
+    //     if (!$topup) {
+    //         return response()->json(['message' => 'Data top up tidak ditemukan'], 404);
+    //     }
+        
+    //     // Cari konsumen buat nambahin saldonya
+    //     $konsumen = Konsumen::find($topup->konsumen_id);
+    //     if ($konsumen) {
+    //         // Asumsikan ada kolom 'saldo' di tabel 'konsumens'
+    //         // Kalo belum ada, tambahin dulu kolomnya pake migration.
+    //         // $konsumen->saldo += $topup->nominal;
+    //         // $konsumen->save();
+    //     }
+        
+    //     // Update status topup jadi Berhasil
+    //     $topup->status = 'Berhasil';
+    //     $topup->save();
+        
+    //     // Ambil data konsumen buat dikirim balik
+    //     $konsumenData = $topup->konsumen;
+
+    //     return response()->json([
+    //         'message' => 'Top up berhasil dikonfirmasi!',
+    //         'data' => [
+    //             'id' => $topup->id,
+    //             'status' => $topup->status,
+    //             'konsumen' => [
+    //                 'no_identitas' => $konsumenData->no_identitas,
+    //                 'nama' => $konsumenData->nama,
+    //                 'no_telepon' => $konsumenData->no_telepon
+    //             ],
+    //             'nominal' => $topup->nominal
+    //         ]
+    //     ], 200);
+    // }
     public function confirm(Request $request, $id)
     {
-        $topup = Topup::find($id);
+        $topup = Topup::with('konsumen')->find($id);
+        // $topup = Topup::with('konsumen')->where('kode', $id)->first();
+
 
         if (!$topup) {
             return response()->json(['message' => 'Data top up tidak ditemukan'], 404);
         }
-        
-        // Cari konsumen buat nambahin saldonya
-        $konsumen = Konsumen::find($topup->konsumen_id);
-        if ($konsumen) {
-            // Asumsikan ada kolom 'saldo' di tabel 'konsumens'
-            // Kalo belum ada, tambahin dulu kolomnya pake migration.
-            // $konsumen->saldo += $topup->nominal;
-            // $konsumen->save();
+
+        if ($topup->status == 'Berhasil') {
+            return response()->json(['message' => 'Top up ini sudah pernah dikonfirmasi.'], 400);
+        }
+
+        try {
+            // Gunakan DB Transaction untuk keamanan data
+            // Kalo salah satu gagal, semua proses bakal dibatalin (rollback)
+            DB::transaction(function () use ($topup) {
+                // 1. Ambil data konsumen dari relasi
+                $konsumen = $topup->konsumen;
+                
+                if ($konsumen) {
+                    // 2. Tambahkan nominal top up ke saldo konsumen
+                    $konsumen->saldo += $topup->nominal;
+                    $konsumen->save();
+                }
+
+                // 3. Ubah status top up jadi Berhasil
+                $topup->status = 'Berhasil';
+                $topup->save();
+            });
+
+        } catch (Throwable $e) {
+            // Kalo ada error di tengah jalan, kasih respons gagal
+            return response()->json([
+                'message' => 'Terjadi kesalahan saat memproses top up.',
+                'error' => $e->getMessage()
+            ], 500);
         }
         
-        // Update status topup jadi Berhasil
-        $topup->status = 'Berhasil';
-        $topup->save();
-        
-        // Ambil data konsumen buat dikirim balik
-        $konsumenData = $topup->konsumen;
+        // Refresh data topup untuk dapet data konsumen terbaru (termasuk saldo)
+        $topup->refresh();
 
         return response()->json([
-            'message' => 'Top up berhasil dikonfirmasi!',
-            'data' => [
-                'id' => $topup->id,
-                'status' => $topup->status,
-                'konsumen' => [
-                    'no_identitas' => $konsumenData->no_identitas,
-                    'nama' => $konsumenData->nama,
-                    'no_telepon' => $konsumenData->no_telepon
-                ],
-                'nominal' => $topup->nominal
-            ]
+            'message' => 'Top up berhasil dikonfirmasi dan saldo telah ditambahkan!',
+            'data' => $topup
         ], 200);
     }
 }

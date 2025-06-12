@@ -14,8 +14,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Rute untuk mendaftarkan Konsumen baru dari aplikasi mobile
+// Router konsumen Register & Login
 Route::post('/konsumen/register', [KonsumenApiController::class, 'store']);
+Route::post('/konsumen/login', [KonsumenApiController::class, 'login']);
 
 // Api untuk lapangan
 Route::get('/lapangans', [LapanganController::class, 'index']); // Untuk daftar lapangan (sudah ada)
@@ -42,6 +43,6 @@ Route::post('/pemesanan', [PemesananController::class, 'store']);
 Route::post('/topup', [TopupApiController::class, 'store']);
 
 // Rute untuk konfirmasi Top Up dari Web Admin
-Route::patch('/topup/{id}/confirm', [TopupApiController::class, 'confirm'])->middleware('auth:sanctum'); // Atau 'auth' kalo admin login pake session web
+// Route::patch('/topup/{id}/confirm', [TopupApiController::class, 'confirm'])->middleware('auth:sanctum'); // Atau 'auth' kalo admin login pake session web
 // Api Untuk uji coba top melalui postman
 // Route::patch('/topup/{id}/confirm', [TopupApiController::class, 'confirm']); //->middleware('auth:sanctum'); // 

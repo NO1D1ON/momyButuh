@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('email')->unique();
             $table->string('no_telepon')->nullable();
+            $table->decimal('saldo', 15, 2)->default(0)->after('no_telepon');
             $table->string('password'); // Password dari mobile, akan di-hash
             $table->timestamps(); // created_at dan updated_at
         });

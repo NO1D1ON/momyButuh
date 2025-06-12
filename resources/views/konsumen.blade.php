@@ -31,6 +31,7 @@
                         <th>Nama</th>
                         <th>Email</th>
                         <th>No. Telepon</th>
+                        <th>Saldo</th>
                         <th>Password</th>
                     </tr>
                 </thead>
@@ -41,6 +42,9 @@
                             <td>{{ $konsumen->nama }}</td>
                             <td>{{ $konsumen->email }}</td>
                             <td>{{ $konsumen->no_telepon ?? '-' }}</td> {{-- Tampilkan '-' jika null --}}
+                            <td>
+                                Rp {{ number_format($konsumen->saldo, 0, ',', '.') }}
+                            </td>
                             <td>{{ Str::limit($konsumen->password, 8, 'xxx') }}</td> {{-- Tampilkan sebagian hash password --}}
                         </tr>
                     @empty

@@ -80,39 +80,31 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Ambil semua tombol konfirmasi
     const confirmButtons = document.querySelectorAll('.btn-confirm');
 
     confirmButtons.forEach(button => {
         button.addEventListener('click', function () {
             const topupId = this.dataset.id;
 
-            // Tampilkan popup konfirmasi dari SweetAlert2
             Swal.fire({
                 title: 'Konfirmasi Top Up?',
                 text: `Anda yakin ingin mengkonfirmasi top up dengan ID: ${topupId}?`,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#28a745', // Warna hijau, sesuai tombol sukses
-                cancelButtonColor: '#dc3545',  // Warna merah
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#dc3545',
                 confirmButtonText: 'Ya, Konfirmasi!',
                 cancelButtonText: 'Batal'
             }).then((result) => {
-                // Kalo user klik tombol "Ya, Konfirmasi!"
                 if (result.isConfirmed) {
-                    
-                    // Tampilkan loading spinner biar keliatan lagi proses
                     Swal.fire({
                         title: 'Memproses...',
-                        text: 'Mohon tunggu sebentar ya.',
                         allowOutsideClick: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        }
+                        didOpen: () => { Swal.showLoading() }
                     });
 
-                    // Kirim request ke API kita
-                    fetch(`/api/topup/${topupId}/confirm`, {
+                    // INI BAGIAN YANG DIPERBAIKI (URL-NYA TANPA /api)
+                    fetch(`/topup/${topupId}/confirm`, {
                         method: 'PATCH',
                         headers: {
                             'Content-Type': 'application/json',
@@ -122,34 +114,29 @@ document.addEventListener('DOMContentLoaded', function () {
                     })
                     .then(response => {
                         if (!response.ok) {
-                            // Kalo gagal, lempar error biar ditangkep di .catch()
                             throw new Error('Network response was not ok');
                         }
                         return response.json();
                     })
                     .then(data => {
-                        // Kalo berhasil, update tampilan di halaman
                         const statusBadge = document.getElementById(`status-${topupId}`);
                         if (statusBadge) {
                             statusBadge.textContent = data.data.status;
                             statusBadge.classList.remove('status-pending');
                             statusBadge.classList.add('status-berhasil');
                         }
-                        
-                        // Hilangin tombol konfirmasi
-                        this.remove();
+                        // 'this' di dalam .then bisa beda, jadi kita cari lagi tombolnya
+                        document.querySelector(`.btn-confirm[data-id="${topupId}"]`).remove();
 
-                        // Tampilkan notif sukses dari SweetAlert2
                         Swal.fire({
                             title: 'Berhasil!',
                             text: `Top up ${topupId} telah dikonfirmasi.`,
                             icon: 'success',
-                            timer: 2000, // Notifnya bakal ilang sendiri setelah 2 detik
+                            timer: 2000,
                             showConfirmButton: false
                         });
                     })
                     .catch((error) => {
-                        // Kalo ada error, tampilkan notif gagal dari SweetAlert2
                         Swal.fire({
                             title: 'Oops...',
                             text: 'Terjadi kesalahan saat mengkonfirmasi top up!',
@@ -157,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         });
                     });
                 }
-            })
+            });
         });
     });
 });
