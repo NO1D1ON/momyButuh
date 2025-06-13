@@ -5,10 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\KonsumenApiController; // Import API Controller
 use App\Http\Controllers\Api\LapanganController; // Import API Controller
 use App\Http\Controllers\Api\FasilitasController; // Import API Controller
-// use App\Http\Controllers\Api\PemesananController; // Import API Controller
 use App\Http\Controllers\PemesananController;
 use App\Http\Controllers\Api\TopupApiController;
-// use App\Http\Controllers\Api\TopupController;
 use App\Http\Controllers\TopupController;
 
 
@@ -45,3 +43,7 @@ Route::post('/pemesanan', [PemesananController::class, 'store']);
 Route::post('/topup', [TopupApiController::class, 'store']);
 // Rute untuk konfirmasi Top Up dari Web Admin
 Route::patch('/topup/{id}/confirm', [TopupApiController::class, 'confirm']);
+
+// --- RUTE BARU UNTUK MENGAMBIL PROFIL KONSUMEN ---
+// Middleware 'auth:sanctum' memastikan hanya pengguna dengan token valid yang bisa akses.
+Route::middleware('auth:sanctum')->get('/profile', [KonsumenApiController::class, 'profile']);

@@ -61,6 +61,20 @@ class KonsumenApiController extends Controller
         }
     }
 
+    public function profile(Request $request)
+    {
+        // Berkat middleware 'auth:sanctum', Laravel secara otomatis
+        // akan mengambil data Konsumen yang terotentikasi dari token.
+        // Kita tinggal mengambilnya dengan $request->user().
+        $konsumen = $request->user();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Profile data fetched successfully',
+            'data' => $konsumen
+        ], 200); // 200 OK
+    }
+
     /**
      * Handle a login request for a Konsumen. (FUNGSI LOGIN BARU)
      *
