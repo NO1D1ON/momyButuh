@@ -12,12 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('personal_access_tokens', function (Blueprint $table) {
+            
             $table->id();
-            // UBAH BAGIAN INI
-            // $table->morphs('tokenable'); <-- Hapus atau komentari baris ini
-            // GANTI DENGAN DUA BARIS INI
-            $table->string("tokenable_type");
-            $table->string("tokenable_id"); // <-- Kita ubah menjadi string
+            $table->string('tokenable_type');
+            $table->unsignedBigInteger('tokenable_id');
             $table->string('name');
             $table->string('token', 64)->unique();
             $table->text('abilities')->nullable();
@@ -25,8 +23,8 @@ return new class extends Migration
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
 
-            // TAMBAHKAN INDEX UNTUK PERFORMA
-            $table->index(["tokenable_type", "tokenable_id"]);
+            // Index-nya udah bener
+            $table->index(['tokenable_type', 'tokenable_id']);
         });
     }
 

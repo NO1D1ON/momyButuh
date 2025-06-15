@@ -12,8 +12,8 @@ use App\Http\Controllers\Api\TopupApiController;
 
 
 
-Route::get('login', [UserController::class, 'showLoginForm'])->name('login');
-Route::post('login', [UserController::class, 'login'])->name('auth.login');
+Route::get('/', [UserController::class, 'showLoginForm'])->name('login');
+Route::post('/', [UserController::class, 'login'])->name('auth.login');
 Route::get('forgot-password', [UserController::class, 'ShowPass'])->name('ShowPass');
 
 // Harus login dulu baru kebuka
