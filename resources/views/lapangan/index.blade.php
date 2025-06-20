@@ -2,7 +2,7 @@
 
 @extends('layouts.main')
 
-@section('title', 'Data Lapangan')
+@section('title', 'Data Babysitter')
 
 @push('styles')
     {{-- Gaya CSS lainnya --}}
@@ -16,14 +16,14 @@
 
 @section('content')
     <div class="page-header">
-        <h1>Lapangan</h1>
-        <p>Data Lapangan</p>
+        <h1>Babysistter</h1>
+        <p>Data Babysistter</p>
     </div>
 
     <div class="content-area">
         {{-- Tombol Tambah dan Search Bar di atas tabel (sesuai gambar terakhir) --}}
         <div class="table-controls">
-            <button class="btn btn-success btn-add-lapangan"><i class="fas fa-plus"></i> Lapangan</button>
+            <button class="btn btn-success btn-add-lapangan"><i class="fas fa-plus"></i> Babysitter</button>
             <!-- <div class="search-box">
                 <label for="search-lapangan">Search:</label>
                 <input type="text" id="search-lapangan" placeholder="Search...">
@@ -31,9 +31,9 @@
             </div> -->
             {{-- Bagian Pencarian --}}
             <div class="search-box">
-                <form action="{{ route('lapangan.index') }}" method="GET">
-                    <label for="search-lapangan">Search :</label>
-                    <input type="text" id="search-lapangan" name="search" placeholder="Search..." value="{{ request('search') }}">
+                <form action="{{ route('Babysitter.index') }}" method="GET">
+                    <label for="search-Babysitter">Search :</label>
+                    <input type="text" id="search-Babysitter" name="search" placeholder="Search..." value="{{ request('search') }}">
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
             </div>
@@ -44,13 +44,13 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Nama Lapangan</th>
-                        <th>Lokasi</th>
-                        <th>Harga Lapangan</th>
+                        <th>Nama Babysistter</th>
+                        <th>Alamat Babysistter</th>
+                        <th>Harga Per Jam</th>
                         <th>Rating</th>
-                        <th>Deskripsi Lapangan</th>
-                        <th>Gambar Lapangan</th>
-                        <th>Fasilitas Lapangan</th>
+                        <th>Deskripsi Babysistter</th>
+                        <th>Foto Babysistter</th>
+                        <th>Fasilitas Babysistter</th>
                         <th>Status Aktif</th>
                         <th>Aksi</th>
                     </tr>
@@ -60,17 +60,17 @@
                 </tbody> -->
                  <tbody id="lapanganTableBody">
                    {{-- PENTING: ISI BAGIAN INI DENGAN LOOP BLADE, JANGAN JS --}}
-                    @forelse ($lapangans as $lapangan)
+                    @forelse ($Babysitter as $Babysitter)
                         <tr>
-                            <td>{{ $lapangan->id_lapangan }}</td> {{-- Pastikan nama kolom sesuai model --}}
-                            <td>{{ $lapangan->nama_lapangan }}</td>
-                            <td>{{ $lapangan->lokasi }}</td>
-                            <td>{{ number_format($lapangan->harga_lapangan, 0, ',', '.') }}</td>
-                            <td>{{ $lapangan->rating }}</td>
-                            <td>{{ Str::limit($lapangan->deskripsi_lapangan, 50) }}</td>
+                            <td>{{ $Babysitter->id_Babysitter }}</td> {{-- Pastikan nama kolom sesuai model --}}
+                            <td>{{ $Babysitter->nama_Babysitter }}</td>
+                            <td>{{ $Babysitter->alamat_Babysitter }}</td>
+                            <td>{{ number_format($Babysitter->Harga_Per_Jam, 0, ',', '.') }}</td>
+                            <td>{{ $Babysitter->rating }}</td>
+                            <td>{{ Str::limit($Babysitter->deskripsi_Babysitter, 50) }}</td>
                             <td>
-                                @if($lapangan->gambar_lapangan)
-                                    <img src="{{ asset('storage/' . $lapangan->gambar_lapangan) }}" alt="Gambar Lapangan" style="width: 50px; height: 50px; object-fit: cover;">
+                                @if($Babysitter->Foto_Babysitter)
+                                    <img src="{{ asset('storage/' . $Babysitter->Foto_Babysitter) }}" alt="Gambar Lapangan" style="width: 50px; height: 50px; object-fit: cover;">
                                 @else
                                     Tidak ada gambar
                                 @endif

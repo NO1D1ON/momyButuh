@@ -8,14 +8,14 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('lapangans', function (Blueprint $table) {
-            $table->string('id_lapangan')->primary(); // ID kustom seperti 'LP001'
-            $table->string('nama_lapangan');
-            $table->string('lokasi');
-            $table->integer('harga_lapangan');
+        Schema::create('Babysitter', function (Blueprint $table) {
+            $table->string('id_Babysitter')->primary(); // ID kustom seperti 'LP001'
+            $table->string('nama_Babysitter');
+            $table->string('alamat_Babysitter');
+            $table->integer('harga_Per_Jam');
             $table->float('rating')->default(0.0);
-            $table->text('deskripsi_lapangan')->nullable();
-            $table->string('gambar_lapangan')->nullable(); // Nama file gambar lapangan
+            $table->text('deskripsi_Babysitter')->nullable();
+            $table->string('foto_Babysitter')->nullable(); // Nama file gambar lapangan
             $table->boolean('status_aktif')->default(true);
             $table->timestamps();
         });
@@ -23,6 +23,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('lapangans');
+        Schema::dropIfExists('Babysitter');
     }
 };

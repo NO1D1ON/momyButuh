@@ -1,19 +1,19 @@
-// public/js/lapangan_script.js
+// public/js/Babysitter_script.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    const dataTableBody = document.getElementById('lapanganTableBody');
-    const searchInput = document.getElementById('search-lapangan');
+    const dataTableBody = document.getElementById('BabysitterTableBody');
+    const searchInput = document.getElementById('search-Babysitter');
     const searchButton = searchInput.nextElementSibling;
 
     // Elemen modal dan tombol terkait
-    const addLapanganBtn = document.querySelector('.btn-add-lapangan');
-    const addLapanganModal = document.getElementById('addLapanganModal');
+    const addBabysitterBtn = document.querySelector('.btn-add-Babysitter');
+    const addBabysitterModal = document.getElementById('addBabysitterModal');
     const closeModalButtons = document.querySelectorAll('.close-button, .close-modal-button'); // Pilih kedua tombol close
 
-    const addLapanganForm = document.getElementById('addLapanganForm');
+    const addBabysitterForm = document.getElementById('addBabysitterForm');
     const fasilitasContainer = document.getElementById('fasilitasContainer');
 
-    let editingLapanganId = null;
+    let editingBabysitterId = null;
 
 
     // Fungsi untuk format Rupiah (tetap sama)
@@ -94,10 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Fungsi fillEditForm
-    async function fillEditForm(lapanganId) {
+    async function fillEditForm(BabysitterId) {
         try {
-            console.log(`Mengambil data untuk edit lapangan ID: ${lapanganId}`);
-            const response = await fetch(`/api/lapangans/${lapanganId}`, {
+            console.log(`Mengambil data untuk edit Babysitter ID: ${BabysitterId}`);
+            const response = await fetch(`/api/Babysitter/${BabysitterId}`, {
                 headers: {
                     'Accept': 'application/json' // Penting untuk memastikan respons JSON
                 }
@@ -106,31 +106,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 const errorData = await response.json(); // Coba parse JSON jika ada
                 throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
             }
-            const lapanganData = await response.json();
-            console.log("Data lapangan untuk edit:", lapanganData);
+            const BabysitterData = await response.json();
+            console.log("Data Babysitter untuk edit:", BabysitterData);
 
-            // Set ID lapangan yang sedang diedit
-            editingLapanganId = lapanganData.id;
+            // Set ID Babysitter yang sedang diedit
+            editingBabysitterId = BabysitterData.id;
 
             const formElements = {
-                nama_lapangan: document.getElementById('nama_lapangan'),
-                lokasi: document.getElementById('lokasi'),
-                harga_lapangan: document.getElementById('harga_lapangan'),
+                nama_Babysitter: document.getElementById('nama_Babysitter'),
+                Alamat_Babysitter: document.getElementById('Alamat_Babysitter'),
+                harga_Per_Jam: document.getElementById('harga_Per_Jam'),
                 rating: document.getElementById('rating'),
-                deskripsi_lapangan: document.getElementById('deskripsi_lapangan'),
+                deskripsi_Babysitter: document.getElementById('deskripsi_Babysitter'),
                 status_aktif: document.getElementById('status_aktif'),
-                // Tambahkan field untuk gambar_lapangan jika ada di form Anda
-                // gambar_lapangan: document.getElementById('gambar_lapangan'), // Contoh jika ada input file
+                // Tambahkan field untuk gambar_Babysitter jika ada di form Anda
+                // Foto_Babysitter: document.getElementById('Foto_Babysitter'), // Contoh jika ada input file
             };
 
             for (const id in formElements) {
                 const element = formElements[id];
                 if (element) {
-                    console.log(`Mengisi ${id} dengan nilai:`, lapanganData[id]);
+                    console.log(`Mengisi ${id} dengan nilai:`, BabysitterData[id]);
                     if (id === 'status_aktif') {
-                        element.value = lapanganData[id] ? '1' : '0';
+                        element.value = BabysitterData[id] ? '1' : '0';
                     } else {
-                        element.value = lapanganData[id] || '';
+                        element.value = BabysitterData[id] || '';
                     }
                 } else {
                     console.error(`Elemen dengan ID "${id}" tidak ditemukan di DOM saat mencoba mengisi form edit.`);
@@ -139,26 +139,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Menangani fasilitas (memilih checkbox yang sudah ada)
-            const selectedFasilitasIds = lapanganData.fasilitas ? lapanganData.fasilitas.map(f => f.id_fasilitas) : []; // Perhatikan 'id_fasilitas'
+            const selectedFasilitasIds = BabysitterData.fasilitas ? BabysitterData.fasilitas.map(f => f.id_fasilitas) : []; // Perhatikan 'id_fasilitas'
             await populateFasilitasCheckboxes(selectedFasilitasIds);
 
             const modalTitleElement = document.getElementById('modalTitle');
             if(modalTitleElement) {
-                modalTitleElement.textContent = `Edit Lapangan: ${lapanganData.nama_lapangan}`;
+                modalTitleElement.textContent = `Edit Babysitter: ${BabysitterData.nama_Babysitter}`;
             } else {
                 console.warn("Elemen judul modal dengan ID 'modalTitle' tidak ditemukan.");
             }
 
         } catch (error) {
-            console.error('Gagal memuat data lapangan untuk edit:', error);
+            console.error('Gagal memuat data Babysitter untuk edit:', error);
             // Ganti alert dengan SweetAlert2
             Swal.fire({
                 icon: 'error',
                 title: 'Gagal!',
-                text: `Gagal memuat data lapangan untuk edit: ${error.message}`,
+                text: `Gagal memuat data Babysitter untuk edit: ${error.message}`,
                 showConfirmButton: true
             }).then(() => {
-                addLapanganModal.style.display = 'none'; // Sembunyikan modal jika gagal memuat data
+                addBabysitterModal.style.display = 'none'; // Sembunyikan modal jika gagal memuat data
             });
         }
     }
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
         searchButton.addEventListener('click', () => {
             const searchText = searchInput.value.toLowerCase();
             console.log("Searching for:", searchText);
-            fetchDataLapangan(searchText); // Panggil ulang data dengan filter search
+            fetchDataBabysitter(searchText); // Panggil ulang data dengan filter search
         });
     }
 
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.key === 'Enter') {
             const searchText = event.target.value.toLowerCase();
             console.log("Searching for (Enter):", searchText);
-            fetchDataLapangan(searchText); // Panggil ulang data dengan filter search
+            fetchDataBabysitter(searchText); // Panggil ulang data dengan filter search
         }
     });
 
@@ -189,49 +189,49 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Memulai proses render tabel dengan data:", data);
 
         if (data.length === 0) {
-            dataTableBody.innerHTML = '<tr><td colspan="10" style="text-align: center;">Tidak ada data lapangan.</td></tr>';
-            console.log("Tidak ada data lapangan untuk ditampilkan.");
+            dataTableBody.innerHTML = '<tr><td colspan="10" style="text-align: center;">Tidak ada data Babysitter.</td></tr>';
+            console.log("Tidak ada data Babysitter untuk ditampilkan.");
             return;
         }
 
         data.forEach(lapangan => {
-            console.log("Memproses lapangan:", lapangan.id, lapangan.nama_lapangan);
+            console.log("Memproses Babysitter:", Babysitter.id, Babysitter.nama_Babysitter);
 
             const row = document.createElement('tr');
 
             const tdId = document.createElement('td');
-            tdId.textContent = lapangan.id;
+            tdId.textContent = Babysitter.id;
             row.appendChild(tdId);
 
             const tdNama = document.createElement('td');
-            tdNama.textContent = lapangan.nama_lapangan;
+            tdNama.textContent = Babysitter.nama_Babysitter;
             row.appendChild(tdNama);
 
             const tdLokasi = document.createElement('td');
-            tdLokasi.textContent = lapangan.lokasi;
-            row.appendChild(tdLokasi);
+            tdLokasi.textContent = Babysitter.Alamat_Babysitter;
+            row.appendChild(tdAlamat_Babysitter);
 
             const tdHarga = document.createElement('td');
-            tdHarga.textContent = formatRupiah(lapangan.harga_lapangan);
-            row.appendChild(tdHarga);
+            tdHarga.textContent = formatRupiah(Babysitter.harga_Per_Jam);
+            row.appendChild(tdHarga_Per_Jam);
 
             const tdRating = document.createElement('td');
-            tdRating.textContent = lapangan.rating;
+            tdRating.textContent = Babysitter.rating;
             row.appendChild(tdRating);
 
             const tdDeskripsi = document.createElement('td');
-            tdDeskripsi.textContent = lapangan.deskripsi_lapangan;
+            tdDeskripsi.textContent = Babysitter.deskripsi_Babysitter;
             row.appendChild(tdDeskripsi);
 
             const tdGambar = document.createElement('td');
             const img = document.createElement('img');
-            img.src = lapangan.full_gambar_url; // URL gambar lapangan
-            img.alt = lapangan.nama_lapangan;
+            img.src = Babysitter.full_gambar_url; // URL gambar Babysitter
+            img.alt = Babysitter.nama_Babysitter;
             img.classList.add('img-thumbnail');
             img.onerror = function() { // Tangani jika gambar tidak ditemukan (404)
                 this.onerror = null; // Mencegah looping error
                 this.src = 'https://via.placeholder.com/50x50?text=No+Image'; // Gambar placeholder
-                console.warn(`Gambar tidak ditemukan untuk lapangan ID ${lapangan.id}: ${lapangan.full_gambar_url}`);
+                console.warn(`Gambar tidak ditemukan untuk Babysitter ID ${Babysitter.id}: ${Babysitter.full_gambar_url}`);
             };
             tdGambar.appendChild(img);
             row.appendChild(tdGambar);
@@ -239,10 +239,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const tdFasilitas = document.createElement('td');
             const fasilitasDiv = document.createElement('div');
             fasilitasDiv.classList.add('fasilitas-icons');
-            console.log(`Fasilitas untuk ${lapangan.id}:`, lapangan.fasilitas);
+            console.log(`Fasilitas untuk ${Babysitter.id}:`, Babysitter.fasilitas);
 
-            if (lapangan.fasilitas && Array.isArray(lapangan.fasilitas)) {
-                lapangan.fasilitas.forEach(f => {
+            if (Babysitter.fasilitas && Array.isArray(Babysitter.fasilitas)) {
+                Babysitter.fasilitas.forEach(f => {
                     const p = document.createElement('p');
                     if (f.gambar_ikon && f.full_gambar_url) {
                         const iconImg = document.createElement('img');
@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     fasilitasDiv.appendChild(p);
                 });
             } else {
-                console.warn(`Lapangang ${lapangan.id} tidak memiliki array fasilitas yang valid.`);
+                console.warn(`Babysitter ${Babysitter.id} tidak memiliki array fasilitas yang valid.`);
             }
             tdFasilitas.appendChild(fasilitasDiv);
             row.appendChild(tdFasilitas);
@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const tdStatus = document.createElement('td');
             const statusIcon = document.createElement('i');
-            if (lapangan.status_aktif) {
+            if (Babysitter.status_aktif) {
                 statusIcon.classList.add('fas', 'fa-check-circle', 'status-active');
             } else {
                 statusIcon.classList.add('fas', 'fa-times-circle', 'status-inactive');
@@ -283,30 +283,30 @@ document.addEventListener('DOMContentLoaded', () => {
             editBtn.href = "#";
             editBtn.classList.add('btn-action', 'edit');
             editBtn.innerHTML = '<i class="fas fa-edit"></i>';
-            editBtn.title = `Edit ${lapangan.nama_lapangan}`;
+            editBtn.title = `Edit ${Babysitter.nama_Babysitter}`;
 
             editBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                console.log(`--- Tombol Edit diklik untuk Lapangan ID: ${lapangan.id} ---`);
+                console.log(`--- Tombol Edit diklik untuk Babysitter ID: ${Babysitter.id} ---`);
                 addLapanganModal.style.display = 'flex'; // Tampilkan modal
 
                 // --- Panggil fillEditForm tanpa setTimeout, SweetAlert akan menangani asinkronisitas ---
-                fillEditForm(lapangan.id);
+                fillEditForm(Babysitter.id);
             });
 
             const deleteBtn = document.createElement('a');
             deleteBtn.href = "#";
             deleteBtn.classList.add('btn-action', 'delete');
             deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
-            deleteBtn.title = `Hapus ${lapangan.nama_lapangan}`;
+            deleteBtn.title = `Hapus ${Babysitter.nama_Babysitter}`;
             deleteBtn.addEventListener('click', async (e) => {
                 e.preventDefault();
-                console.log(`--- Tombol Delete diklik untuk Lapangan ID: ${lapangan.id} ---`);
+                console.log(`--- Tombol Delete diklik untuk Lapangan ID: ${Babysitter.id} ---`);
 
                 // Ganti confirm dengan SweetAlert2
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
-                    text: `Anda tidak akan bisa mengembalikan lapangan "${lapangan.nama_lapangan}" ini!`,
+                    text: `Anda tidak akan bisa mengembalikan Babysitter "${Babysitter.nama_Babysitter}" ini!`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         try {
                             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-                            const response = await fetch(`/api/lapangans/${lapangan.id}`, {
+                            const response = await fetch(`/api/Babysitter/${Babysitter.id}`, {
                                 method: 'DELETE',
                                 headers: {
                                     'X-CSRF-TOKEN': csrfToken,
@@ -336,20 +336,20 @@ document.addEventListener('DOMContentLoaded', () => {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Dihapus!',
-                                text: 'Lapangan berhasil dihapus.',
+                                text: 'Babysitter berhasil dihapus.',
                                 showConfirmButton: false,
                                 timer: 1500
                             }).then(() => {
-                                fetchDataLapangan(); // Muat ulang data
+                                fetchDataBabysitter(); // Muat ulang data
                             });
 
                         } catch (error) {
-                            console.error('Gagal menghapus lapangan:', error);
+                            console.error('Gagal menghapus Babysitter:', error);
                             // Ganti alert error dengan SweetAlert2
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Gagal!',
-                                text: `Gagal menghapus lapangan: ${error.message}`,
+                                text: `Gagal menghapus Babysitter: ${error.message}`,
                                 showConfirmButton: true
                             });
                         }
@@ -363,13 +363,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             dataTableBody.appendChild(row);
         });
-        console.log("Selesai merender data lapangan.");
+        console.log("Selesai merender data Babysitter.");
     }
 
-    // Fungsi fetchDataLapangan dengan dukungan search
-    async function fetchDataLapangan(searchTerm = '') {
+    // Fungsi fetchDataBabysitter dengan dukungan search
+    async function fetchDataBabysitter(searchTerm = '') {
         try {
-            console.log("Fetching data lapangan...");
+            console.log("Fetching data Babysitter...");
             let url = '/api/lapangans';
             if (searchTerm) {
                 url += `?search=${encodeURIComponent(searchTerm)}`;
@@ -384,10 +384,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            console.log("Data lapangan berhasil diambil:", data);
+            console.log("Data Babysitter berhasil diambil:", data);
             renderTableData(data);
         } catch (error) {
-            console.error("Gagal mengambil data lapangan:", error);
+            console.error("Gagal mengambil data Babysitter:", error);
             dataTableBody.innerHTML = '<tr><td colspan="10" style="text-align: center; color: red;">Gagal memuat data. Silakan coba lagi.</td></tr>';
             // Ganti alert/pesan error loading dengan SweetAlert2
             Swal.fire({
@@ -399,21 +399,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Panggil fetchDataLapangan saat halaman dimuat
-    fetchDataLapangan();
+    // Panggil fetchDataBabysitter saat halaman dimuat
+    fetchDataBabysitter();
 
-    // Event listener untuk tombol "Tambah Lapangan"
+    // Event listener untuk tombol "Tambah Babysitter"
     if (addLapanganBtn) {
         addLapanganBtn.addEventListener('click', () => {
-            console.log('Tombol "Tambah Lapangan" diklik.');
-            editingLapanganId = null; // Set ID lapangan yang diedit menjadi null untuk mode tambah
-            addLapanganModal.style.display = 'flex'; // Tampilkan modal
+            console.log('Tombol "Tambah Babysitter" diklik.');
+            editingBabysitterId = null; // Set ID Babysitter yang diedit menjadi null untuk mode tambah
+            addBabysitterModal.style.display = 'flex'; // Tampilkan modal
             populateFasilitasCheckboxes(); // Isi fasilitas saat modal dibuka (kosongkan pilihan sebelumnya)
             const modalTitleElement = document.getElementById('modalTitle');
             if(modalTitleElement) {
-                modalTitleElement.textContent = 'Tambah Lapangan Baru'; // Gunakan ID baru
+                modalTitleElement.textContent = 'Tambah Babysitter Baru'; // Gunakan ID baru
             }
-            addLapanganForm.reset(); // Pastikan form bersih saat membuka untuk tambah
+            addBabysitterForm.reset(); // Pastikan form bersih saat membuka untuk tambah
             // Reset URL gambar dan info gambar saat ini (jika ada)
             // Jika ada elemen untuk gambar utama lapangan, pastikan juga di-reset
             const currentImagePreview = document.getElementById('currentImagePreview'); // Asumsi ada elemen ini
@@ -427,9 +427,9 @@ document.addEventListener('DOMContentLoaded', () => {
     closeModalButtons.forEach(button => {
         button.addEventListener('click', () => {
             console.log('Tombol penutup modal diklik.');
-            addLapanganModal.style.display = 'none'; // Sembunyikan modal
-            addLapanganForm.reset(); // Reset form saat ditutup
-            editingLapanganId = null; // Reset ID lapangan yang diedit saat modal ditutup
+            addBabysitterModal.style.display = 'none'; // Sembunyikan modal
+            addBabysitterForm.reset(); // Reset form saat ditutup
+            editingBabysitterId = null; // Reset ID Babysitter yang diedit saat modal ditutup
             // Reset URL gambar dan info gambar saat ini (jika ada)
             const currentImagePreview = document.getElementById('currentImagePreview'); // Asumsi ada elemen ini
             if (currentImagePreview) {
@@ -443,8 +443,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.target === addLapanganModal) {
             console.log('Klik di luar modal, menutup modal.');
             addLapanganModal.style.display = 'none';
-            addLapanganForm.reset();
-            editingLapanganId = null; // Reset ID lapangan yang diedit saat modal ditutup
+            addBabysitterForm.reset();
+            editingBabysitterId = null; // Reset ID Babysitter yang diedit saat modal ditutup
             // Reset URL gambar dan info gambar saat ini (jika ada)
             const currentImagePreview = document.getElementById('currentImagePreview'); // Asumsi ada elemen ini
             if (currentImagePreview) {
@@ -453,18 +453,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Event listener untuk submit form tambah lapangan
+    // Event listener untuk submit form tambah Babysitter
     addLapanganForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        console.log('Form submit Tambah/Edit Lapangan dipicu.');
+        console.log('Form submit Tambah/Edit Babysitter dipicu.');
 
-        const formData = new FormData(addLapanganForm);
+        const formData = new FormData(addBabysitterForm);
 
-        let url = '/api/lapangans';
+        let url = '/api/Babysitter';
         let method = 'POST';
 
-        if (editingLapanganId) {
-            url = `/api/lapangans/${editingLapanganId}`;
+        if (editingBabysitterId) {
+            url = `/api/Babysitter/${editingBabysitterId}`;
             method = 'POST'; // Tetap POST karena FormData dengan _method=PUT
             formData.append('_method', 'PUT');
             console.log(`[DEBUG SUBMIT] URL untuk UPDATE: ${url}`);

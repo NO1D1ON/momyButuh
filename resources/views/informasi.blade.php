@@ -14,10 +14,8 @@
         </div>
 
         <div class="info-card">
-            <p>"Aplikasi kami menawarkan layanan penyewaan lapangan futsal yang dirancang
-                untuk mempermudah pengguna dalam menemukan dan memesan lapangan dengan
-                mudah. Sebagai mitra terpercaya, kami berkomitmen untuk memberikan pengalaman
-                yang cepat, efisien, dan user-friendly bagi komunitas penggemar olahraga futsal"</p>
+            <p>"Aplikasi ini kami menawarkan layanan jasa babysister yang dimana dirancang untuk mempermudah orangtua dalam mencari Babysistter untuk menjaga anaknya, 
+                dimana didalam aplikasi yang kami rancang, untuk mempermudah dan meringankan tugas orang tua dalam menjaga anaknya."</p>
         </div>
     </div>
 @endsection

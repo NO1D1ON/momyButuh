@@ -29,6 +29,9 @@
                     <tr>
                         <th>No Identitas</th>
                         <th>Nama</th>
+                        <th>Alamat</th>
+                        <th>Jumlah_Anak</th>
+                        <th>Kriteria</th>
                         <th>Email</th>
                         <th>No. Telepon</th>
                         <th>Saldo</th>
@@ -40,6 +43,9 @@
                         <tr>
                             <td>{{ $konsumen->no_identitas }}</td>
                             <td>{{ $konsumen->nama }}</td>
+                            <td>{{ $konsumen->Alamat }}</td>
+                            <td>{{ $konsumen->Jumlah_Anak }}</td>
+                            <td>{{ $konsumen->Kriteria }}</td>
                             <td>{{ $konsumen->email }}</td>
                             <td>{{ $konsumen->no_telepon ?? '-' }}</td> {{-- Tampilkan '-' jika null --}}
                             <td>

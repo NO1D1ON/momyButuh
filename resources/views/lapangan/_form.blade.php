@@ -4,8 +4,8 @@
     @csrf {{-- Penting untuk keamanan Laravel --}}
 
     <div class="form-group">
-        <label for="nama_lapangan">Nama Lapangan:</label>
-        <input type="text" id="nama_lapangan" name="nama_lapangan" required>
+        <label for="nama_Babysitter">Nama Babysitter:</label>
+        <input type="text" id="nama_Babysitter" name="nama_Babysitter" required>
     </div>
 
     <div class="form-group">
@@ -14,8 +14,8 @@
     </div>
 
     <div class="form-group">
-        <label for="harga_lapangan">Harga Lapangan (Rp):</label>
-        <input type="number" id="harga_lapangan" name="harga_lapangan" required min="0">
+        <label for="harga_Per_Jam">Harga Per Jam (Rp):</label>
+        <input type="number" id="harga_Per_Jam" name="harga_Per_Jam" required min="0">
     </div>
 
     <div class="form-group">
@@ -24,17 +24,17 @@
     </div>
 
     <div class="form-group">
-        <label for="deskripsi_lapangan">Deskripsi Lapangan:</label>
-        <textarea id="deskripsi_lapangan" name="deskripsi_lapangan" rows="4"></textarea>
+        <label for="deskripsi_Babysitter">Deskripsi Babysitter:</label>
+        <textarea id="deskripsi_Babysitter" name="deskripsi_Babysitter" rows="4"></textarea>
     </div>
 
     <div class="form-group">
-        <label for="gambar_lapangan">Gambar Lapangan:</label>
-        <input type="file" id="gambar_lapangan" name="gambar_lapangan" accept="image/*">
+        <label for="foto_Babysitter">Gambar Lapangan:</label>
+        <input type="file" id="foto_Babysitter" name="foto_Babysitter" accept="image/*">
     </div>
 
     <div class="form-group">
-        <label>Fasilitas Lapangan:</label>
+        <label>Fasilitas Babysitter:</label>
         <div id="fasilitasContainer" class="fasilitas-checkboxes">
             {{-- Fasilitas akan dimuat di sini oleh JavaScript --}}
             {{-- Contoh statis jika belum ada JS untuk fasilitas: --}}
@@ -53,6 +53,6 @@
         </select>
     </div>
 
-    <button type="submit" class="btn btn-primary">Simpan Lapangan</button>
+    <button type="submit" class="btn btn-primary">Simpan Babysitter</button>
     <button type="button" class="btn btn-secondary close-modal-button">Batal</button>
 </form>
