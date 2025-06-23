@@ -1,164 +1,129 @@
-/* public/css/login.css */
-
-:root {
-    --primary-color: #f5a623; /* Warna oranye utama */
-    --dark-bg-color: #1a1a1a; /* Warna latar belakang gelap */
-    --card-bg-color: #2e2e2e; /* Warna latar belakang kartu/box login */
-    --text-color-light: #f0f0f0; /* Warna teks terang */
-    --input-bg-color: #444444; /* Warna latar belakang input field */
-    --input-text-color: #ffffff; /* Warna teks input field */
-    --placeholder-color: #aaaaaa; /* Warna placeholder input */
-    --button-hover-color: #e09210; /* Warna tombol saat hover */
-}
-
+/* Mengatur dasar halaman */
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: var(--dark-bg-color); /* Latar belakang gelap untuk seluruh halaman */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Pastikan halaman mengambil tinggi penuh viewport */
-    color: var(--text-color-light);
-    overflow: hidden; /* Mencegah scroll */
+    height: 100vh;
+    /* Latar belakang gradasi lingkaran */
+    background-color: #fce4ec; /* Warna dasar jika gradasi tidak didukung */
+    background-image: 
+        radial-gradient(circle at 15% 85%, rgba(255, 128, 171, 0.4), transparent 40%),
+        radial-gradient(circle at 85% 20%, rgba(255, 128, 171, 0.5), transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8), transparent 30%);
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
+/* Kontainer utama yang menampung form login */
 .login-container {
+    text-align: center;
+}
+
+/* Box untuk form login */
+.login-box {
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 360px;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 20px;
-    box-sizing: border-box; /* Memastikan padding termasuk dalam lebar/tinggi */
-    width: 100%;
 }
 
+/* Area Logo di dalam form */
 .logo-area {
-    margin-bottom: 40px; /* Jarak antara logo dan kotak login */
-    text-align: center;
+    margin-bottom: 20px;
 }
 
 .logo-area img {
-    max-width: 180px; /* Ukuran maksimal logo */
+    max-width: 90px;
     height: auto;
 }
 
-.login-box {
-    background-color: var(--card-bg-color);
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    width: 100%;
-    max-width: 400px; /* Lebar maksimal kotak login */
-    text-align: center;
-    box-sizing: border-box;
-}
-
+/* Judul "Admin Login" */
 .login-box h2 {
-    color: var(--text-color-light);
     margin-top: 0;
-    margin-bottom: 30px;
-    font-size: 1.8em;
-    font-weight: bold;
+    margin-bottom: 25px;
+    color: #333;
+    font-size: 24px;
 }
 
+/* Grup input (ikon + field) */
 .input-group {
     position: relative;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+    width: 100%;
 }
 
-.input-group i {
+/* Ikon di dalam field input */
+.input-group .fas {
     position: absolute;
-    left: 25px;
+    left: 15px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--placeholder-color);
-    font-size: 1.1em;
+    color: #aaa;
+    z-index: 2; /* Memastikan ikon di atas background input */
 }
 
+/* === PERUBAHAN DIMULAI DI SINI === */
+
+/* Field input (email dan password) - Keadaan Normal */
 .input-group input {
-    width: calc(100% - 30px); /* Lebar input dikurangi padding dan ikon */
-    padding: 15px 15px 15px 45px; /* Padding kiri untuk ikon */
-    border: none;
-    border-radius: 5px;
-    background-color: var(--input-bg-color);
-    color: var(--input-text-color);
-    font-size: 1em;
-    outline: none; /* Hapus outline saat fokus */
+    width: 100%;
+    padding: 12px 15px 12px 45px; /* Padding kiri untuk ruang ikon */
+    border: 1px solid #f8c0d3; /* Border pink yang sangat pudar */
+    border-radius: 8px;
     box-sizing: border-box;
+    font-size: 16px;
+    color: #333; /* Warna teks agar mudah dibaca */
+    background-color: #fff0f5; /* Warna pink sangat pudar (Lavender Blush) */
+    /* Transisi untuk border dan background */
+    transition: border-color 0.3s, background-color 0.3s;
 }
 
-.input-group input::placeholder {
-    color: var(--placeholder-color);
-}
-
+/* Field input - Keadaan Aktif (Fokus) */
 .input-group input:focus {
-    box-shadow: 0 0 0 2px var(--primary-color); /* Border fokus warna oranye */
+    outline: none; /* Menghilangkan outline biru bawaan browser */
+    background-color: #ffc1d7; /* Warna pink lebih gelap saat aktif */
+    border-color: #ff74a4; /* Border mengikuti warna pink utama */
 }
 
+/* === PERUBAHAN SELESAI DI SINI === */
+
+/* Tombol Login */
 .login-button {
     width: 100%;
-    padding: 15px;
-    background-color: var(--primary-color);
-    color: white;
+    padding: 12px;
     border: none;
-    border-radius: 5px;
-    font-size: 1.1em;
+    border-radius: 8px;
+    background-color: #ff74a4; /* Warna pink utama untuk tombol */
+    color: white;
+    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-top: 20px;
 }
 
 .login-button:hover {
-    background-color: var(--button-hover-color);
+    background-color: #e96092; /* Warna pink lebih gelap saat hover */
 }
 
+/* Tautan Lupa Kata Sandi */
 .forgot-password {
-    margin-top: 25px;
-    font-size: 0.95em;
+    margin-top: 20px;
 }
 
 .forgot-password a {
-    color: var(--primary-color); /* Warna tautan oranye */
+    color: #ff74a4; /* Warna pink yang sama dengan tombol */
     text-decoration: none;
-    transition: color 0.3s ease;
+    font-size: 14px;
 }
 
 .forgot-password a:hover {
-    color: var(--button-hover-color);
     text-decoration: underline;
-}
-
-/* Responsif untuk layar yang lebih kecil */
-@media (max-width: 500px) {
-    .login-box {
-        padding: 30px 20px;
-        max-width: 320px;
-    }
-    .logo-area {
-        margin-bottom: 30px;
-    }
-    .logo-area img {
-        max-width: 150px;
-    }
-    .login-box h2 {
-        font-size: 1.6em;
-        margin-bottom: 25px;
-    }
-    .input-group {
-        margin-bottom: 20px;
-    }
-    .input-group input {
-        padding: 12px 12px 12px 40px;
-        font-size: 0.95em;
-    }
-    .login-button {
-        padding: 12px;
-        font-size: 1em;
-    }
-    .forgot-password {
-        margin-top: 20px;
-        font-size: 0.9em;
-    }
 }
